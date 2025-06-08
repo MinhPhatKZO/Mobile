@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="#FF6200EE" /> <!-- Màu nền hình tròn, thay đổi theo ý bạn -->
+
+    <stroke
+        android:width="2dp"
+        android:color="#FF3700B3" /> <!-- Viền ngoài -->
+
+    <size
+        android:width="48dp"
+        android:height="48dp" /> <!-- Kích thước cố định, có thể bỏ nếu muốn auto -->
+
+</shape>

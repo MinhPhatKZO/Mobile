@@ -2,31 +2,59 @@ package com.example.projecttng;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.MenuItem;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnSignIn;
-    private TextView signupText;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Thay bằng tên file layout Sign In của bạn
+        setContentView(R.layout.activity_home); // Đảm bảo layout đúng
 
-        btnSignIn = findViewById(R.id.btnSignIn);
-        signupText = findViewById(R.id.signup_text);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
 
-        // Sự kiện click Sign In (nếu cần)
-        btnSignIn.setOnClickListener(v -> {
-            // TODO: Xử lý đăng nhập
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.nav_category) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    startActivity(new Intent(MainActivity.this, CategoryActivity.class));
+                    return true;
+                } else if (id == R.id.nav_product) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    startActivity(new Intent(MainActivity.this, ProductActivity.class));
+                    return true;
+                } else if (id == R.id.nav_order) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    startActivity(new Intent(MainActivity.this, OrderActivity.class));
+                    return true;
+                } else if (id == R.id.nav_shopping_cart) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    startActivity(new Intent(MainActivity.this, ShoppingCartActivity.class));
+                    return true;
+                }
+                return false;
+            }
         });
 
-        // Sự kiện click Sign Up Now - chuyển sang SignUpActivity
-        signupText.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+        findViewById(R.id.btn_menu).setOnClickListener(v -> {
+            drawerLayout.openDrawer(GravityCompat.START);
+        });
+        // Sự kiện click avatar user
+        findViewById(R.id.icon_profile).setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
             startActivity(intent);
         });
     }

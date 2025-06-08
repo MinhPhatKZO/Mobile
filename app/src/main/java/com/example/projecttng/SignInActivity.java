@@ -19,36 +19,37 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Đổi tên layout tương ứng của bạn
+        setContentView(R.layout.activity_main); // Đảm bảo bạn có file này
 
+        // Ánh xạ view
         btnSignIn = findViewById(R.id.btnSignIn);
         signupText = findViewById(R.id.signup_text);
         usernameEditText = findViewById(R.id.username_edittext);
         passwordEditText = findViewById(R.id.password_edittext);
 
+        // Xử lý đăng nhập
         btnSignIn.setOnClickListener(v -> {
-            String username = usernameEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString().trim();
+            String username = usernameEditText.getText() != null ? usernameEditText.getText().toString().trim() : "";
+            String password = passwordEditText.getText() != null ? passwordEditText.getText().toString().trim() : "";
 
             if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(SignInActivity.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Vui lòng nhập tài khoản và mật khẩu", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Kiểm tra tài khoản mẫu
+            if (username.equals("admin") && password.equals("123456")) {
+                Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, HomeActivity.class));
+                finish(); // Không quay lại màn hình đăng nhập khi nhấn back
             } else {
-                // Giả sử kiểm tra đăng nhập thành công với username/password mẫu
-                if (username.equals("admin") && password.equals("123456")) {
-                    Toast.makeText(SignInActivity.this, "Signing in...", Toast.LENGTH_SHORT).show();
-                    // Chuyển sang HomeActivity
-                    Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish(); // đóng SignInActivity để không quay lại màn hình đăng nhập khi bấm back
-                } else {
-                    Toast.makeText(SignInActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show();
             }
         });
 
+        // Chuyển sang SignUpActivity
         signupText.setOnClickListener(v -> {
-            Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, SignUpActivity.class));
         });
     }
 }

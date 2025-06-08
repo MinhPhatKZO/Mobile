@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:text="Logo"
-        android:textColor="#000"
+        android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/username_layout"
-        app:startIconDrawable="@drawable/rounded_button">
+        app:startIconDrawable="@android:drawable/ic_lock_idle_lock">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password_edittext"
@@ -77,9 +77,9 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="56dp"
-        android:backgroundTint="#FFA000"
+        app:backgroundTint="#FFA000"
         android:text="SIGN IN"
-        android:textColor="#000"
+        android:textColor="#000000"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,16 +91,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Don't have an account?\nSIGN UP NOW"
+        android:text="Don\'t have an account?\nSIGN UP NOW"
         android:textAlignment="center"
         android:textSize="12sp"
         android:textStyle="bold"
         android:clickable="true"
         android:focusable="true"
-        android:textColor="#000"
+        android:focusableInTouchMode="true"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnSignIn" />
+        app:layout_constraintTop_toBottomOf="@id/btnSignIn"
+        android:gravity="center" />
 
     <!-- Contact Support -->
     <TextView
@@ -110,7 +112,7 @@
         android:layout_marginBottom="12dp"
         android:text="Contact support"
         android:textSize="12sp"
-        android:textColor="#000"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@id/social_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -131,16 +133,19 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_margin="8dp"
+            android:contentDescription="Facebook"
             android:src="@drawable/ic_facebook" />
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_margin="8dp"
+            android:contentDescription="Instagram"
             android:src="@drawable/ic_instagram" />
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_margin="8dp"
+            android:contentDescription="TikTok"
             android:src="@drawable/ic_tiktok" />
     </LinearLayout>
 

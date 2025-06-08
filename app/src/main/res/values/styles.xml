@@ -1,0 +1,16 @@
+<resources>
+    <!-- Style cho LinearLayout trong danh sách chức năng -->
+    <style name="SettingItemLinearLayout">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:background">@color/light_gray_bg</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!-- Style chung (không có orientation) -->
+    <style name="SettingItem">
+        <item name="android:padding">12dp</item>
+        <item name="android:background">@color/light_gray_bg</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+</resources>
