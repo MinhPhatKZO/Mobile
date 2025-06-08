@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,16 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             return true;
+        });
+
+        // Xử lý Bottom Navigation
+        ImageView iconProfile = findViewById(R.id.icon_profile);
+        iconProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
+                startActivity(intent);
+            }
         });
 
         // Khởi tạo RecyclerView danh sách món ăn

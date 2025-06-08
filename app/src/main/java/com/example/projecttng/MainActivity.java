@@ -3,11 +3,13 @@ package com.example.projecttng;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home); // Đảm bảo layout đúng
+        setContentView(R.layout.activity_home);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -27,21 +29,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
+                drawerLayout.closeDrawer(GravityCompat.START);
 
                 if (id == R.id.nav_category) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
                     startActivity(new Intent(MainActivity.this, CategoryActivity.class));
                     return true;
                 } else if (id == R.id.nav_product) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
                     startActivity(new Intent(MainActivity.this, ProductActivity.class));
                     return true;
                 } else if (id == R.id.nav_order) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
                     startActivity(new Intent(MainActivity.this, OrderActivity.class));
                     return true;
                 } else if (id == R.id.nav_shopping_cart) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
                     startActivity(new Intent(MainActivity.this, ShoppingCartActivity.class));
                     return true;
                 }
@@ -52,10 +51,23 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_menu).setOnClickListener(v -> {
             drawerLayout.openDrawer(GravityCompat.START);
         });
-        // Sự kiện click avatar user
-        findViewById(R.id.icon_profile).setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
-            startActivity(intent);
+
+        // Top-right profile button
+        View btnProfile = findViewById(R.id.btn_profile);
+        if (btnProfile != null) {
+            btnProfile.setOnClickListener(v -> {
+                startActivity(new Intent(MainActivity.this, UserProfileActivity.class));
+            });
+        }
+
+        // Bottom navigation profile icon
+        ImageView iconProfile = findViewById(R.id.icon_profile);
+        iconProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
+                startActivity(intent);
+            }
         });
     }
 }

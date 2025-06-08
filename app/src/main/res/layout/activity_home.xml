@@ -172,6 +172,8 @@
                 android:padding="4dp"
                 android:src="@drawable/ic_foodlist" />
 
+            <!-- Place this at the bottom of your layout, adjust parent as needed -->
+
             <ImageView
                 android:id="@+id/icon_cart"
                 android:layout_width="0dp"
@@ -186,11 +188,16 @@
                 android:id="@+id/icon_profile"
                 android:layout_width="0dp"
                 android:layout_height="32dp"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="12dp"
                 android:layout_weight="1"
-                android:contentDescription="Profile Icon"
-                android:padding="4dp"
-                android:src="@drawable/ic_user" />
+                android:background="#FBD0D9"
+                android:clickable="true"
 
+
+                android:contentDescription="@string/profile"
+                android:focusable="true"
+                android:src="@drawable/ic_user1" />
         </LinearLayout>
 
 

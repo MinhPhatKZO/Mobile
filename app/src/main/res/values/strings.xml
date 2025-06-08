@@ -3,5 +3,6 @@
     <string name="calories_icon">Calories icon</string>
     <string name="price_icon">Price icon</string>
     <string name="time_icon">Time icon</string>
+    <string name="profile">Profile</string>
 
 </resources>
