@@ -9,9 +9,11 @@ public class FoodItem {
     private int imageResId;
     private int soldCount;
     private int likeCount;
+    private float rating; // Added rating field
+    private int quantity = 1; // default quantity
 
-    // Constructor đầy đủ 8 tham số
-    public FoodItem(String name, String description, String calories, String price, String time, int imageResId, int soldCount, int likeCount) {
+    // Full constructor (9 parameters)
+    public FoodItem(String name, String description, String calories, String price, String time, int imageResId, int soldCount, int likeCount, float rating) {
         this.name = name;
         this.description = description;
         this.calories = calories;
@@ -20,11 +22,17 @@ public class FoodItem {
         this.imageResId = imageResId;
         this.soldCount = soldCount;
         this.likeCount = likeCount;
+        this.rating = rating;
     }
 
-    // Constructor cũ 6 tham số (giữ lại để tránh lỗi ở các class cũ)
+    // Constructor without rating (defaults to 0)
+    public FoodItem(String name, String description, String calories, String price, String time, int imageResId, int soldCount, int likeCount) {
+        this(name, description, calories, price, time, imageResId, soldCount, likeCount, 0f);
+    }
+
+    // Old constructor (6 parameters)
     public FoodItem(String name, String description, String calories, String price, String time, int imageResId) {
-        this(name, description, calories, price, time, imageResId, 0, 0); // Mặc định soldCount và likeCount = 0
+        this(name, description, calories, price, time, imageResId, 0, 0, 0f);
     }
 
     // Getters
@@ -36,4 +44,31 @@ public class FoodItem {
     public int getImageResId() { return imageResId; }
     public int getSoldCount() { return soldCount; }
     public int getLikeCount() { return likeCount; }
+    public int getLikes() { return likeCount; }
+    public float getRating() { return rating; } // Added getter
+
+    // Setter for rating
+    public void setRating(float rating) { this.rating = rating; }
+
+    // Quantity
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+
+    // Parse price string to int
+    public int getParsedPrice() {
+        try {
+            return Integer.parseInt(price.replace(".", "").replace("đ", "").trim());
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    // Temporary ID based on name
+    public String getId() {
+        return name;
+    }
+    public String getFormattedPrice() {
+        return String.format("%,d đ", getParsedPrice()).replace(',', '.');
+    }
+
 }

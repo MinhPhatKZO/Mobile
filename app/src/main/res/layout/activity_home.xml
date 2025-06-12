@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <!-- Nội dung chính -->
 
@@ -13,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF">
+        android:background="#DDDBC3C3">
 
         <!-- Nút menu -->
         <ImageView
@@ -22,6 +23,7 @@
             android:layout_height="32dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
+            android:background="#F2C3D4"
             android:contentDescription="Menu Button"
             android:src="@drawable/ic_menu"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,6 +88,7 @@
             android:layout_marginEnd="20dp"
             android:gravity="center"
             android:orientation="horizontal"
+            android:background="@drawable/rounded_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_search">
@@ -98,7 +101,8 @@
                 android:layout_marginEnd="8dp"
                 android:contentDescription="Home Category"
                 android:drawableStart="@drawable/ic_home"
-                android:text="Home" />
+                android:text="Home"
+                />
 
             <Button
                 android:id="@+id/btn_fastfood"
@@ -144,6 +148,7 @@
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_bg"
             android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="4"
@@ -157,7 +162,7 @@
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_weight="1"
-                android:background="#FBD0D9"
+                android:background="@drawable/rounded_bg"
                 android:contentDescription="Home Icon"
                 android:padding="4dp"
                 android:src="@drawable/ic_home" />
@@ -167,7 +172,7 @@
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_weight="1"
-                android:background="#FFF6E7"
+                android:background="@drawable/rounded_bg"
                 android:contentDescription="Food List Icon"
                 android:padding="4dp"
                 android:src="@drawable/ic_foodlist" />
@@ -179,7 +184,7 @@
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_weight="1"
-                android:background="#FBE7E7"
+                android:background="@drawable/rounded_bg"
                 android:contentDescription="Cart Icon"
                 android:padding="4dp"
                 android:src="@drawable/ic_favoritefood" />
@@ -191,10 +196,8 @@
                 android:layout_gravity="bottom|end"
                 android:layout_margin="12dp"
                 android:layout_weight="1"
-                android:background="#FBD0D9"
+                android:background="@drawable/rounded_bg"
                 android:clickable="true"
-
-
                 android:contentDescription="@string/profile"
                 android:focusable="true"
                 android:src="@drawable/ic_user1" />

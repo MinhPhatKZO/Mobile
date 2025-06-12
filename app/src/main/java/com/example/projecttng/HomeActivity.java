@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
             if (id == R.id.nav_category) {
                 startActivity(new Intent(HomeActivity.this, CategoryActivity.class));
             } else if (id == R.id.nav_product) {
-                startActivity(new Intent(HomeActivity.this, ProductActivity.class));
+                startActivity(new Intent(HomeActivity.this, CategoryActivity.class));
             } else if (id == R.id.nav_order) {
                 startActivity(new Intent(HomeActivity.this, OrderActivity.class));
             } else if (id == R.id.nav_shopping_cart) {

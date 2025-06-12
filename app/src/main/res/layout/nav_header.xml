@@ -1,21 +1,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="160dp"
+    android:background="#F49477"
+    android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="bottom">
+    android:padding="16dp">
 
     <ImageView
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="102dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="150dp"
+        android:background="@drawable/rounded_bg"
         android:contentDescription="User Avatar"
         android:src="@drawable/ic_user" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Xin chào, User"
-        android:textColor="#fff"
-        android:textSize="18sp"
-        android:paddingTop="8dp" />
+        android:layout_height="45dp"
+        android:layout_marginStart="120dp"
+        android:background="@drawable/rounded_bg"
+        android:paddingTop="10dp"
+
+        android:text="Xin chào, Minh Phát"
+        android:textColor="#01181B"
+        android:textSize="18sp" />
 </LinearLayout>

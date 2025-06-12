@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +26,28 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
+        // Mở Navigation Drawer khi nhấn nút menu
+        findViewById(R.id.btn_menu).setOnClickListener(v -> {
+            drawerLayout.openDrawer(GravityCompat.START);
+        });
+
+        // Mở trang profile khi nhấn nút góc trên
+        View btnProfile = findViewById(R.id.btn_profile);
+        if (btnProfile != null) {
+            btnProfile.setOnClickListener(v -> {
+                startActivityWithAnimation(UserProfileActivity.class);
+            });
+        }
+
+        // Mở trang profile khi nhấn biểu tượng ở thanh dưới
+        ImageView iconProfile = findViewById(R.id.icon_profile);
+        if (iconProfile != null) {
+            iconProfile.setOnClickListener(v -> {
+                startActivityWithAnimation(UserProfileActivity.class);
+            });
+        }
+
+        // Xử lý chọn item trong Navigation Drawer
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -32,42 +55,44 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.closeDrawer(GravityCompat.START);
 
                 if (id == R.id.nav_category) {
-                    startActivity(new Intent(MainActivity.this, CategoryActivity.class));
-                    return true;
-                } else if (id == R.id.nav_product) {
-                    startActivity(new Intent(MainActivity.this, ProductActivity.class));
+                    startActivityWithAnimation(CategoryActivity.class);
                     return true;
                 } else if (id == R.id.nav_order) {
-                    startActivity(new Intent(MainActivity.this, OrderActivity.class));
+                    startActivityWithAnimation(OrderActivity.class);
                     return true;
                 } else if (id == R.id.nav_shopping_cart) {
-                    startActivity(new Intent(MainActivity.this, ShoppingCartActivity.class));
+                    startActivityWithAnimation(ShoppingCartActivity.class);
                     return true;
+                } else {
+                    return false;
                 }
-                return false;
             }
         });
+    }
 
-        findViewById(R.id.btn_menu).setOnClickListener(v -> {
-            drawerLayout.openDrawer(GravityCompat.START);
-        });
+    // Thêm hiệu ứng khi mở activity mới
+    private void startActivityWithAnimation(Class<?> cls) {
+        Intent intent = new Intent(MainActivity.this, cls);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
 
-        // Top-right profile button
-        View btnProfile = findViewById(R.id.btn_profile);
-        if (btnProfile != null) {
-            btnProfile.setOnClickListener(v -> {
-                startActivity(new Intent(MainActivity.this, UserProfileActivity.class));
-            });
+    // Hàm xử lý đăng xuất (tuỳ chọn nếu có chức năng logout)
+    private void logoutUser() {
+        // TODO: Xoá session, shared preferences...
+        Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    // Xử lý nút Back khi Drawer đang mở
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
-
-        // Bottom navigation profile icon
-        ImageView iconProfile = findViewById(R.id.icon_profile);
-        iconProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 }

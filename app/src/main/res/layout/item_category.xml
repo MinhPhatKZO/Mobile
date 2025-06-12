@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <!-- Hình ảnh món ăn -->
     <ImageView
         android:id="@+id/img_food"
         android:layout_width="80dp"
@@ -17,7 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- Tên món ăn -->
     <TextView
         android:id="@+id/tv_food_name"
         android:layout_width="0dp"
@@ -27,24 +25,23 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/btn_add"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/img_food"
-        app:layout_constraintTop_toTopOf="@id/img_food" />
+        app:layout_constraintTop_toTopOf="@id/img_food"
+        app:layout_constraintHorizontal_bias="0" />
 
-    <!-- Số lượng đã bán & lượt thích -->
     <LinearLayout
         android:id="@+id/layout_stats"
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/tv_food_name"
+        app:layout_constraintEnd_toStartOf="@id/btn_add"
         app:layout_constraintTop_toBottomOf="@id/tv_food_name">
 
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/ic_shopping_cart"
-
             android:layout_marginEnd="4dp"/>
 
         <TextView
@@ -60,7 +57,6 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/ic_favoritefood"
-
             android:layout_marginEnd="4dp"/>
 
         <TextView
@@ -72,19 +68,19 @@
             android:textColor="#888888"/>
     </LinearLayout>
 
-    <!-- Giá món ăn -->
     <TextView
         android:id="@+id/tv_price"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="48.000đ"
         android:textColor="#E53935"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/layout_stats"
-        app:layout_constraintTop_toBottomOf="@id/layout_stats" />
+        app:layout_constraintEnd_toStartOf="@id/btn_add"
+        app:layout_constraintTop_toBottomOf="@id/layout_stats"
+        app:layout_constraintBottom_toBottomOf="@id/img_food" />
 
-    <!-- Nút thêm (+) -->
     <ImageButton
         android:id="@+id/btn_add"
         android:layout_width="36dp"
@@ -92,7 +88,6 @@
         android:backgroundTint="#800026FF"
         android:scaleType="center"
         android:src="@drawable/ic_add"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
