@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="16dp"
-            android:weightSum="3">
+            android:weightSum="4">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -54,9 +55,10 @@
                     android:src="@drawable/ic_foodlist" />
 
                 <TextView
+                    android:id="@+id/tv_item_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15 món"
+                    android:text="10 món"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -97,7 +99,63 @@
                     android:text="5 - 10 phút"
                     android:textSize="14sp" />
             </LinearLayout>
+
+            <!-- Nút lọc danh mục -->
+            <LinearLayout
+                android:id="@+id/btn_filter_category"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_filter" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lọc"
+                    android:textSize="14sp" />
+            </LinearLayout>
         </LinearLayout>
+
+        <!-- Chip Group để hiển thị bộ lọc đang chọn -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tất cả"
+                android:checked="true"
+                style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_food"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đồ ăn"
+                style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_drink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đồ uống"
+                style="@style/Widget.MaterialComponents.Chip.Choice" />
+        </com.google.android.material.chip.ChipGroup>
 
         <!-- Danh sách món ăn -->
         <androidx.recyclerview.widget.RecyclerView

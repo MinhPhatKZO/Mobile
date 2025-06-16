@@ -79,10 +79,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadFoodData() {
+        // Sử dụng constructor cũ vẫn hoạt động bình thường (mặc định là FOOD)
         foodList.add(new FoodItem("Sushi Maki", "Sushi tươi ngon chuẩn vị Nhật", "100kcal", "40.000đ", "60min", R.drawable.sushi));
         foodList.add(new FoodItem("Bánh Mì", "Bánh mì giòn rụm thơm ngon", "200kcal", "25.000đ", "30min", R.drawable.banhmi));
+        foodList.add(new FoodItem("Gà Rán", "Gà rán giòn tan thơm ngon", "1500kcal", "40.000đ", "60min", R.drawable.garan));
+        foodList.add(new FoodItem("Bún Bò", "Sợi bún hòa huyện với nước lèo béo ngậy", "2000kcal", "35.000đ", "30min", R.drawable.bunbo));
+        foodList.add(new FoodItem("Trà Đá", "Trà đá mát lạnh", "10kcal", "5.000đ", "2min", R.drawable.trada));
         foodList.add(new FoodItem("Trà Sữa", "Trà sữa béo ngậy, vị thơm", "150kcal", "30.000đ", "10min", R.drawable.trasua));
     }
+
 
     @Override
     public void onBackPressed() {

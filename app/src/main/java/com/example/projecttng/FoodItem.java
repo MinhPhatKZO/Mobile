@@ -9,11 +9,29 @@ public class FoodItem {
     private int imageResId;
     private int soldCount;
     private int likeCount;
-    private float rating; // Added rating field
-    private int quantity = 1; // default quantity
+    private float rating;
+    private int quantity = 1;
+    private FoodType type; // Thêm loại món
 
-    // Full constructor (9 parameters)
-    public FoodItem(String name, String description, String calories, String price, String time, int imageResId, int soldCount, int likeCount, float rating) {
+    // Enum cho loại món
+    public enum FoodType {
+        FOOD("Đồ ăn"),
+        DRINK("Đồ uống");
+
+        private String displayName;
+
+        FoodType(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+    }
+
+    // Full constructor với type (10 parameters)
+    public FoodItem(String name, String description, String calories, String price, String time,
+                    int imageResId, int soldCount, int likeCount, float rating, FoodType type) {
         this.name = name;
         this.description = description;
         this.calories = calories;
@@ -23,16 +41,24 @@ public class FoodItem {
         this.soldCount = soldCount;
         this.likeCount = likeCount;
         this.rating = rating;
+        this.type = type;
     }
 
-    // Constructor without rating (defaults to 0)
-    public FoodItem(String name, String description, String calories, String price, String time, int imageResId, int soldCount, int likeCount) {
-        this(name, description, calories, price, time, imageResId, soldCount, likeCount, 0f);
+    // Constructor without type (defaults to FOOD) - 9 parameters
+    public FoodItem(String name, String description, String calories, String price, String time,
+                    int imageResId, int soldCount, int likeCount, float rating) {
+        this(name, description, calories, price, time, imageResId, soldCount, likeCount, rating, FoodType.FOOD);
+    }
+
+    // Constructor without rating and type (8 parameters)
+    public FoodItem(String name, String description, String calories, String price, String time,
+                    int imageResId, int soldCount, int likeCount) {
+        this(name, description, calories, price, time, imageResId, soldCount, likeCount, 0f, FoodType.FOOD);
     }
 
     // Old constructor (6 parameters)
     public FoodItem(String name, String description, String calories, String price, String time, int imageResId) {
-        this(name, description, calories, price, time, imageResId, 0, 0, 0f);
+        this(name, description, calories, price, time, imageResId, 0, 0, 0f, FoodType.FOOD);
     }
 
     // Getters
@@ -45,10 +71,12 @@ public class FoodItem {
     public int getSoldCount() { return soldCount; }
     public int getLikeCount() { return likeCount; }
     public int getLikes() { return likeCount; }
-    public float getRating() { return rating; } // Added getter
+    public float getRating() { return rating; }
+    public FoodType getType() { return type; }
 
-    // Setter for rating
+    // Setters
     public void setRating(float rating) { this.rating = rating; }
+    public void setType(FoodType type) { this.type = type; }
 
     // Quantity
     public int getQuantity() { return quantity; }
@@ -67,8 +95,8 @@ public class FoodItem {
     public String getId() {
         return name;
     }
+
     public String getFormattedPrice() {
         return String.format("%,d đ", getParsedPrice()).replace(',', '.');
     }
-
 }
