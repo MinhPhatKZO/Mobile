@@ -1,6 +1,7 @@
 package com.example.projecttng;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,8 @@ import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
 
-    Context context;
-    List<FoodItem> foodList;
+    private final Context context;
+    private final List<FoodItem> foodList;
 
     public FoodAdapter(Context context, List<FoodItem> foodList) {
         this.context = context;
@@ -35,10 +36,26 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
         holder.tvName.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
-        holder.tvCalories.setText(item.getCalories());
-        holder.tvPrice.setText(item.getPrice());
-        holder.tvTime.setText(item.getTime());
+        holder.tvCalories.setText("Calories: " + item.getCalories());
+        holder.tvPrice.setText(item.getFormattedPrice());
+        holder.tvTime.setText("Thời gian: " + item.getTime());
         holder.imgFood.setImageResource(item.getImageResId());
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, FoodDetailActivity.class);
+            intent.putExtra("name", item.getName());
+            intent.putExtra("description", item.getDescription());
+            intent.putExtra("calories", item.getCalories());
+            intent.putExtra("price", item.getFormattedPrice());
+            intent.putExtra("time", item.getTime());
+            intent.putExtra("imageResId", item.getImageResId());
+            intent.putExtra("soldCount", item.getSoldCount());
+            intent.putExtra("likeCount", item.getLikeCount());
+            intent.putExtra("rating", item.getRating());
+            intent.putExtra("type", item.getType().getDisplayName()); // enum to string
+
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -53,7 +70,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imgFood = itemView.findViewById(R.id.iv_food);
             tvName = itemView.findViewById(R.id.tv_name);
             tvDescription = itemView.findViewById(R.id.tv_description);
