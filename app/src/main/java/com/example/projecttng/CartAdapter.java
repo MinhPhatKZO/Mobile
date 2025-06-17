@@ -37,25 +37,43 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        FoodItem item = cartItems.get(position);
+        FoodItem currentItem = cartItems.get(position);
 
-        holder.tvName.setText(item.getName());
-        holder.tvQuantity.setText(String.valueOf(item.getQuantity()));
-        holder.tvPrice.setText(formatCurrency(item.getParsedPrice() * item.getQuantity()));
-        holder.imgFood.setImageResource(item.getImageResId());
+        holder.tvName.setText(currentItem.getName());
+        holder.tvQuantity.setText(String.valueOf(currentItem.getQuantity()));
+        holder.tvPrice.setText(formatCurrency(currentItem.getParsedPrice() * currentItem.getQuantity()));
+        holder.imgFood.setImageResource(currentItem.getImageResId());
 
+        // Nút cộng
         holder.btnPlus.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION) return;
+
+            FoodItem item = cartItems.get(pos);
             item.setQuantity(item.getQuantity() + 1);
-            notifyItemChanged(position);
+            notifyItemChanged(pos);
             listener.onCartChanged();
         });
 
+        // Nút trừ (xoá nếu = 0)
         holder.btnMinus.setOnClickListener(v -> {
-            if (item.getQuantity() > 1) {
-                item.setQuantity(item.getQuantity() - 1);
-                notifyItemChanged(position);
-                listener.onCartChanged();
+            int pos = holder.getAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION) return;
+
+            FoodItem item = cartItems.get(pos);
+            int newQuantity = item.getQuantity() - 1;
+
+            if (newQuantity > 0) {
+                item.setQuantity(newQuantity);
+                notifyItemChanged(pos);
+            } else {
+                CartManager.removeItem(item.getId());
+                cartItems.remove(pos);
+                notifyItemRemoved(pos);
+                notifyItemRangeChanged(pos, cartItems.size());
             }
+
+            listener.onCartChanged();
         });
     }
 
