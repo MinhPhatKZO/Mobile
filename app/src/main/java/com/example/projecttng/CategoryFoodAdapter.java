@@ -60,7 +60,7 @@ public class CategoryFoodAdapter extends RecyclerView.Adapter<CategoryFoodAdapte
         }
 
         if (holder.tvLikes != null) {
-            holder.tvLikes.setText(item.getLikes() + " thích");
+            holder.tvLikes.setText(item.getLikeCount() + " thích");
         }
 
         // Khi click vào nút "+"

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
@@ -20,7 +21,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     public FoodAdapter(Context context, List<FoodItem> foodList) {
         this.context = context;
-        this.foodList = foodList;
+        this.foodList = new ArrayList<>(foodList != null ? foodList : new ArrayList<>());
     }
 
     @NonNull
@@ -33,6 +34,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         FoodItem item = foodList.get(position);
+        if (item == null) return;
 
         holder.tvName.setText(item.getName());
         holder.tvDescription.setText(item.getDescription());
@@ -52,8 +54,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             intent.putExtra("soldCount", item.getSoldCount());
             intent.putExtra("likeCount", item.getLikeCount());
             intent.putExtra("rating", item.getRating());
-            intent.putExtra("type", item.getType().getDisplayName()); // enum to string
-
+            intent.putExtra("type", item.getType().getDisplayName());
             context.startActivity(intent);
         });
     }
@@ -63,8 +64,21 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         return foodList.size();
     }
 
-    static class FoodViewHolder extends RecyclerView.ViewHolder {
+    // Update the food list and notify UI
+    public void setFoodList(List<FoodItem> newList) {
+        foodList.clear();
+        if (newList != null) {
+            foodList.addAll(newList);
+        }
+        notifyDataSetChanged();
+    }
 
+    // Optional: get item at position
+    public FoodItem getItem(int position) {
+        return (position >= 0 && position < foodList.size()) ? foodList.get(position) : null;
+    }
+
+    static class FoodViewHolder extends RecyclerView.ViewHolder {
         ImageView imgFood;
         TextView tvName, tvDescription, tvCalories, tvPrice, tvTime;
 
