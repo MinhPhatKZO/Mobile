@@ -1,9 +1,14 @@
-package com.example.projecttng;
+package com.example.projecttng.activity;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.projecttng.model.FoodItem;
+import com.example.projecttng.R;
+import com.example.projecttng.adapter.FoodAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -15,7 +15,7 @@
 
         <!-- SignIn là màn hình đầu tiên khởi chạy -->
         <activity
-            android:name=".SignInActivity"
+            android:name=".activity.SignInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,48 +25,48 @@
 
         <!-- SignUp sẽ quay về SignIn -->
         <activity
-            android:name=".SignUpActivity"
+            android:name=".activity.SignUpActivity"
             android:exported="false"
-            android:parentActivityName=".SignInActivity" >
+            android:parentActivityName=".activity.SignInActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SignInActivity" />
+                android:value=".activity.SignInActivity" />
         </activity>
 
         <!-- MainActivity: chỉ vào sau khi đăng nhập -->
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="false" />
 
         <activity
-            android:name=".HomeActivity"
+            android:name=".activity.HomeActivity"
             android:exported="false" />
 
         <activity
-            android:name=".CategoryActivity"
+            android:name=".activity.CategoryActivity"
             android:exported="false" />
 
         <activity
-            android:name=".OrderActivity"
+            android:name=".activity.OrderActivity"
             android:exported="false" />
         <activity
-            android:name=".ProductActivity"
+            android:name=".activity.ProductActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ShoppingCartActivity"
+            android:name=".activity.ShoppingCartActivity"
             android:exported="false" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".activity.UserProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".FavoriteActivity"
+            android:name=".activity.FavoriteActivity"
             android:exported="false" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".activity.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".FoodDetailActivity"
+            android:name=".activity.FoodDetailActivity"
             android:exported="false" />
     </application>
 

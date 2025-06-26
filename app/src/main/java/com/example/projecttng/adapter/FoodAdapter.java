@@ -1,4 +1,4 @@
-package com.example.projecttng;
+package com.example.projecttng.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.projecttng.activity.FoodDetailActivity;
+import com.example.projecttng.model.FoodItem;
+import com.example.projecttng.R;
 
 import java.util.ArrayList;
 import java.util.List;

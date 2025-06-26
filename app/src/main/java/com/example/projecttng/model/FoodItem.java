@@ -1,4 +1,4 @@
-package com.example.projecttng;
+package com.example.projecttng.model;
 
 import androidx.annotation.NonNull;
 

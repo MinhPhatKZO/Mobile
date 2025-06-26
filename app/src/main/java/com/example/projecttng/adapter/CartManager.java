@@ -1,4 +1,6 @@
-package com.example.projecttng;
+package com.example.projecttng.adapter;
+
+import com.example.projecttng.model.FoodItem;
 
 import java.util.ArrayList;
 import java.util.Iterator;

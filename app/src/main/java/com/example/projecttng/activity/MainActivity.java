@@ -1,4 +1,4 @@
-package com.example.projecttng;
+package com.example.projecttng.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projecttng.model.FoodItem;
+import com.example.projecttng.R;
+import com.example.projecttng.adapter.FoodAdapter;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
