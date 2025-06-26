@@ -10,7 +10,7 @@ public class CartManager {
     private static final List<FoodItem> cartItems = new ArrayList<>();
 
     // Thêm món vào giỏ hàng
-    public static void addItem(FoodItem item) {
+    public static synchronized void addItem(FoodItem item) {
         for (FoodItem i : cartItems) {
             if (i.getId().equals(item.getId())) {
                 i.setQuantity(i.getQuantity() + 1);
@@ -21,7 +21,7 @@ public class CartManager {
     }
 
     // Cập nhật số lượng món
-    public static void updateItemQuantity(String id, int quantity) {
+    public static synchronized void updateItemQuantity(String id, int quantity) {
         for (FoodItem item : cartItems) {
             if (item.getId().equals(id)) {
                 item.setQuantity(quantity);
@@ -31,7 +31,7 @@ public class CartManager {
     }
 
     // Xóa món khỏi giỏ hàng
-    public static void removeItem(String id) {
+    public static synchronized void removeItem(String id) {
         Iterator<FoodItem> iterator = cartItems.iterator();
         while (iterator.hasNext()) {
             FoodItem item = iterator.next();
@@ -43,7 +43,7 @@ public class CartManager {
     }
 
     // Kiểm tra món đã tồn tại chưa
-    public static boolean containsItem(String id) {
+    public static synchronized boolean containsItem(String id) {
         for (FoodItem item : cartItems) {
             if (item.getId().equals(id)) return true;
         }
@@ -51,12 +51,12 @@ public class CartManager {
     }
 
     // Lấy danh sách giỏ hàng
-    public static List<FoodItem> getCartItems() {
-        return cartItems;
+    public static synchronized List<FoodItem> getCartItems() {
+        return new ArrayList<>(cartItems); // trả về bản sao để tránh bị thay đổi từ bên ngoài
     }
 
     // Tổng số món trong giỏ
-    public static int getTotalQuantity() {
+    public static synchronized int getTotalQuantity() {
         int total = 0;
         for (FoodItem item : cartItems) {
             total += item.getQuantity();
@@ -65,7 +65,7 @@ public class CartManager {
     }
 
     // Tổng tiền
-    public static int getTotalPrice() {
+    public static synchronized int getTotalPrice() {
         int total = 0;
         for (FoodItem item : cartItems) {
             total += item.getParsedPrice() * item.getQuantity();
@@ -74,7 +74,12 @@ public class CartManager {
     }
 
     // Xóa toàn bộ giỏ hàng
-    public static void clearCart() {
+    public static synchronized void clearCart() {
         cartItems.clear();
+    }
+
+    // Singleton style nếu cần dùng getInstance()
+    public static CartManager getInstance() {
+        return new CartManager(); // bạn có thể chuyển sang Singleton thực sự nếu cần
     }
 }

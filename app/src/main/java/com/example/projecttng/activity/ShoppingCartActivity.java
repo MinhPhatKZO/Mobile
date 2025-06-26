@@ -10,29 +10,36 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projecttng.R;
+import com.example.projecttng.adapter.CartAdapter;
+import com.example.projecttng.adapter.CartManager;
+import com.example.projecttng.model.FoodItem;
+
+import java.util.List;
 
 public class ShoppingCartActivity extends AppCompatActivity {
 
     private ImageView btnBack;
-    private TextView tvTitle, tvAddress, tvContact, tvTotalPrice;
+    private TextView tvTitle, tvItemCount, tvTotalPrice;
     private Button btnAddMore, btnCheckout;
     private RadioGroup rgPayment;
     private RadioButton rbCod, rbMomo, rbVnpay;
     private RecyclerView rvCartItems;
 
+    private CartAdapter cartAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shoppingcart); // Đổi tên XML nếu cần
+        setContentView(R.layout.activity_shoppingcart);
 
         // Ánh xạ view
         btnBack = findViewById(R.id.btn_back);
         tvTitle = findViewById(R.id.tv_title);
-        tvAddress = findViewById(R.id.tv_address);
-        tvContact = findViewById(R.id.tv_contact);
+        tvItemCount = findViewById(R.id.tv_item_count);
         tvTotalPrice = findViewById(R.id.tv_total_price);
         btnAddMore = findViewById(R.id.btn_add_more);
         btnCheckout = findViewById(R.id.btn_checkout);
@@ -42,17 +49,19 @@ public class ShoppingCartActivity extends AppCompatActivity {
         rbVnpay = findViewById(R.id.rb_vnpay);
         rvCartItems = findViewById(R.id.rv_cart_items);
 
-        // Sự kiện nút quay lại
+        // Gán adapter và dữ liệu
+        setupCart();
+
+        // Nút quay lại
         btnBack.setOnClickListener(view -> finish());
 
-        // Sự kiện nút chọn thêm món
+        // Nút chọn thêm món → về CategoryActivity
         btnAddMore.setOnClickListener(view -> {
-            // Gọi về màn hình chọn món (ví dụ: MainActivity)
             Intent intent = new Intent(this, CategoryActivity.class);
             startActivity(intent);
         });
 
-        // Sự kiện thanh toán
+        // Nút thanh toán
         btnCheckout.setOnClickListener(view -> {
             int selectedId = rgPayment.getCheckedRadioButtonId();
 
@@ -61,18 +70,37 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 return;
             }
 
-            // Có thể xử lý tuỳ từng phương thức ở đây
-            if (selectedId == R.id.rb_cod) {
-                Toast.makeText(this, "Bạn đã chọn COD", Toast.LENGTH_SHORT).show();
-            } else if (selectedId == R.id.rb_momo) {
-                Toast.makeText(this, "Bạn đã chọn thanh toán Momo", Toast.LENGTH_SHORT).show();
-            } else if (selectedId == R.id.rb_vnpay) {
-                Toast.makeText(this, "Bạn đã chọn thanh toán VNPay", Toast.LENGTH_SHORT).show();
-            }
+            String method = "";
+            if (selectedId == R.id.rb_cod) method = "COD";
+            else if (selectedId == R.id.rb_momo) method = "Momo";
+            else if (selectedId == R.id.rb_vnpay) method = "VNPay";
 
-            // Chuyển sang màn hình "Đặt hàng thành công"
+            Toast.makeText(this, "Bạn đã chọn thanh toán bằng " + method, Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent(this, OrderActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void setupCart() {
+        List<FoodItem> items = CartManager.getInstance().getCartItems();
+
+        cartAdapter = new CartAdapter(this, items, this::updateCartSummary);
+        rvCartItems.setLayoutManager(new LinearLayoutManager(this));
+        rvCartItems.setAdapter(cartAdapter);
+
+        updateCartSummary(); // Gọi cập nhật số món và giá tổng ban đầu
+    }
+
+    private void updateCartSummary() {
+        int totalQuantity = CartManager.getInstance().getTotalQuantity();
+        int totalPrice = CartManager.getInstance().getTotalPrice();
+
+        tvItemCount.setText(totalQuantity + " Món đang chọn");
+        tvTotalPrice.setText(formatCurrency(totalPrice));
+    }
+
+    private String formatCurrency(int amount) {
+        return String.format("%,d đ", amount).replace(",", ".");
     }
 }
