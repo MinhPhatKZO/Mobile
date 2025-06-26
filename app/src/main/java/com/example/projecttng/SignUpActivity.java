@@ -8,17 +8,23 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.projecttng.database.DBHelper;
+
 public class SignUpActivity extends AppCompatActivity {
+
+    DBHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);  // sửa lại đúng cú pháp
+        setContentView(R.layout.activity_sign_up);
 
-        // Bật nút back mặc định trên ActionBar (nếu có)
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Sign Up");
         }
+
+        dbHelper = new DBHelper(this); // Khởi tạo DBHelper
 
         ImageView btnBack = findViewById(R.id.btn_back);
         if (btnBack != null) {
@@ -40,10 +46,19 @@ public class SignUpActivity extends AppCompatActivity {
             } else if (!password.equals(confirmPassword)) {
                 Toast.makeText(SignUpActivity.this, "Mật khẩu xác nhận không đúng", Toast.LENGTH_SHORT).show();
             } else {
-                // Đăng ký thành công, chuyển sang HomeActivity
-                Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
-                startActivity(intent);
-                finish();
+                if (!dbHelper.checkUsername(username)) {
+                    boolean inserted = dbHelper.insertData(username, password);
+                    if (inserted) {
+                        Toast.makeText(SignUpActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(SignUpActivity.this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(SignUpActivity.this, "Tên tài khoản đã tồn tại", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

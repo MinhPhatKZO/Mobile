@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.projecttng.database.DBHelper;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class SignInActivity extends AppCompatActivity {
@@ -16,10 +17,14 @@ public class SignInActivity extends AppCompatActivity {
     private TextView signupText;
     private TextInputEditText usernameEditText, passwordEditText;
 
+    private DBHelper dbHelper; // Thêm DBHelper
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Đảm bảo bạn có file này
+        setContentView(R.layout.activity_main); // Đảm bảo đúng tên file XML
+
+        dbHelper = new DBHelper(this); // Khởi tạo DBHelper
 
         // Ánh xạ view
         btnSignIn = findViewById(R.id.btnSignIn);
@@ -37,17 +42,18 @@ public class SignInActivity extends AppCompatActivity {
                 return;
             }
 
-            // Kiểm tra tài khoản mẫu
-            if (username.equals("admin") && password.equals("123456")) {
+            // Kiểm tra tài khoản trong SQLite
+            boolean isValid = dbHelper.checkUserPass(username, password);
+            if (isValid) {
                 Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, HomeActivity.class));
-                finish(); // Không quay lại màn hình đăng nhập khi nhấn back
+                finish(); // Không quay lại login sau khi đã vào home
             } else {
                 Toast.makeText(this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Chuyển sang SignUpActivity
+        // Chuyển sang màn hình đăng ký
         signupText.setOnClickListener(v -> {
             startActivity(new Intent(this, SignUpActivity.class));
         });
