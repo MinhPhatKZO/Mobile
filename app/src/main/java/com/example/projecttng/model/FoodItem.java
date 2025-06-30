@@ -1,10 +1,9 @@
 package com.example.projecttng.model;
 
-import androidx.annotation.NonNull;
+import java.io.Serializable;
 
-public class FoodItem {
-
-    private int id; // ID trong database
+public class FoodItem implements Serializable {
+    private int id;
     private String name;
     private String description;
     private String calories;
@@ -14,41 +13,28 @@ public class FoodItem {
     private int soldCount;
     private int likeCount;
     private float rating;
-    private int quantity = 1;
     private FoodType type;
+    private int quantity = 1;
 
-    // Enum loại món
-    public enum FoodType {
-        FOOD("Đồ ăn"),
-        DRINK("Đồ uống"),
-        DESSERT("Tráng miệng");
+    // Default constructor
+    public FoodItem() {}
 
-        private final String displayName;
-
-        FoodType(String displayName) {
-            this.displayName = displayName;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        // ✅ Convert từ string raw trong DB (VD: "FOOD") thành Enum
-        public static FoodType valueOfSafe(String value) {
-            try {
-                return FoodType.valueOf(value.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                return FOOD; // Mặc định nếu sai
-            }
-        }
-
-        // ✅ Convert Enum thành string raw để lưu DB
-        public String toRawString() {
-            return this.name();
-        }
+    // Constructor for inserting new food (without id)
+    public FoodItem(String name, String description, String calories, String price, String time,
+                    int imageResId, int soldCount, int likeCount, float rating, FoodType type) {
+        this.name = name;
+        this.description = description;
+        this.calories = calories;
+        this.price = price;
+        this.time = time;
+        this.imageResId = imageResId;
+        this.soldCount = soldCount;
+        this.likeCount = likeCount;
+        this.rating = rating;
+        this.type = type;
     }
 
-    // --- Constructor đầy đủ (DAO dùng) ---
+    // Constructor for reading from database (with id)
     public FoodItem(int id, String name, String description, String calories, String price, String time,
                     int imageResId, int soldCount, int likeCount, float rating, FoodType type) {
         this.id = id;
@@ -64,28 +50,8 @@ public class FoodItem {
         this.type = type;
     }
 
-    // --- Constructor UI dùng (không có ID) ---
-    public FoodItem(String name, String description, String calories, String price, String time,
-                    int imageResId, int soldCount, int likeCount, float rating, FoodType type) {
-        this(-1, name, description, calories, price, time, imageResId, soldCount, likeCount, rating, type);
-    }
+    // Getters and setters (unchanged)...
 
-    public FoodItem(String name, String description, String calories, String price, String time,
-                    int imageResId, int soldCount, int likeCount, float rating) {
-        this(name, description, calories, price, time, imageResId, soldCount, likeCount, rating, FoodType.FOOD);
-    }
-
-    public FoodItem(String name, String description, String calories, String price, String time,
-                    int imageResId, int soldCount, int likeCount) {
-        this(name, description, calories, price, time, imageResId, soldCount, likeCount, 0f);
-    }
-
-    public FoodItem(String name, String description, String calories, String price, String time,
-                    int imageResId) {
-        this(name, description, calories, price, time, imageResId, 0, 0);
-    }
-
-    // --- Getter ---
     public int getId() { return id; }
     public String getName() { return name; }
     public String getDescription() { return description; }
@@ -99,13 +65,27 @@ public class FoodItem {
     public FoodType getType() { return type; }
     public int getQuantity() { return quantity; }
 
-    // --- Setter ---
     public void setId(int id) { this.id = id; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setName(String name) { this.name = name; }
+    public void setDescription(String description) { this.description = description; }
+    public void setCalories(String calories) { this.calories = calories; }
+    public void setPrice(String price) { this.price = price; }
+    public void setTime(String time) { this.time = time; }
+    public void setImageResId(int imageResId) { this.imageResId = imageResId; }
+    public void setSoldCount(int soldCount) { this.soldCount = soldCount; }
+    public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
     public void setRating(float rating) { this.rating = rating; }
     public void setType(FoodType type) { this.type = type; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    // --- Logic ---
+    public String getFormattedPrice() {
+        try {
+            return String.format("%,d đ", Integer.parseInt(price)).replace(",", ".");
+        } catch (Exception e) {
+            return price;
+        }
+    }
+
     public int getParsedPrice() {
         try {
             return Integer.parseInt(price.replace(".", "").replace("đ", "").trim());
@@ -114,8 +94,31 @@ public class FoodItem {
         }
     }
 
-    @NonNull
-    public String getFormattedPrice() {
-        return String.format("%,d đ", getParsedPrice()).replace(',', '.');
+    public enum FoodType {
+        FOOD("Đồ ăn"),
+        DRINK("Đồ uống"),
+        DESSERT("Tráng miệng");
+
+        private final String displayName;
+
+        FoodType(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public String toRawString() {
+            return this.name();
+        }
+
+        public static FoodType valueOfSafe(String value) {
+            try {
+                return FoodType.valueOf(value.toUpperCase());
+            } catch (Exception e) {
+                return FOOD;
+            }
+        }
     }
 }

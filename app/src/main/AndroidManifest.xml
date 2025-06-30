@@ -68,6 +68,28 @@
         <activity
             android:name=".activity.FoodDetailActivity"
             android:exported="false" />
+        <!-- Admin dashboard -->
+        <activity
+            android:name=".activity.AdminDashboardActivity"
+            android:exported="false" />
+
+        <!-- Quản lý người dùng -->
+        <activity
+            android:name=".activity.ManageUsersActivity"
+            android:exported="false" />
+
+        <!-- Quản lý món ăn -->
+        <activity
+            android:name=".activity.ManageFoodsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AddFoodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.EditFoodActivity"
+            android:exported="false" />
+
+
     </application>
 
 </manifest>

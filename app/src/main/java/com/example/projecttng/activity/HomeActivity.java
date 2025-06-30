@@ -3,12 +3,10 @@ package com.example.projecttng.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,31 +32,27 @@ public class HomeActivity extends AppCompatActivity {
 
     private Button btnHome, btnFastFood, btnDessert, btnDrink;
 
+    private FoodDao foodDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Khởi tạo View
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         recyclerView = findViewById(R.id.rv_food);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        // Lấy dữ liệu từ SQLite
-        FoodDao foodDao = new FoodDao(this);
-        foodDao.insertSampleFoodsIfEmpty(); // ✅ Chỉ chèn dữ liệu mẫu nếu chưa có
+        foodDao = new FoodDao(this);
+        foodDao.insertSampleFoodsIfEmpty(); // ✅ chỉ chèn dữ liệu nếu rỗng
         allFoodItems = foodDao.getAllFoods();
 
-        // Gắn adapter
         foodAdapter = new FoodAdapter(this, new ArrayList<>(allFoodItems));
         recyclerView.setAdapter(foodAdapter);
 
-        // Mở menu
         findViewById(R.id.btn_menu).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
-        // Xử lý click Profile
         View btnProfile = findViewById(R.id.btn_profile);
         if (btnProfile != null) {
             btnProfile.setOnClickListener(v -> startActivityWithAnimation(UserProfileActivity.class));
@@ -69,7 +63,6 @@ public class HomeActivity extends AppCompatActivity {
             iconProfile.setOnClickListener(v -> startActivityWithAnimation(UserProfileActivity.class));
         }
 
-        // Navigation menu
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -89,11 +82,11 @@ public class HomeActivity extends AppCompatActivity {
             } else if (id == R.id.nav_shopping_cart) {
                 startActivity(new Intent(this, ShoppingCartActivity.class));
             }
+
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
 
-        // Gán nút lọc
         btnHome = findViewById(R.id.btn_home);
         btnFastFood = findViewById(R.id.btn_fastfood);
         btnDessert = findViewById(R.id.btn_dessert);
@@ -118,9 +111,18 @@ public class HomeActivity extends AppCompatActivity {
             filterFoodByType(FoodItem.FoodType.DRINK);
             highlightFilter(btnDrink);
         });
+
+        highlightFilter(btnHome); // Mặc định chọn btnHome
     }
 
-    // Lọc theo loại
+    // Tự động cập nhật danh sách món ăn mới khi quay lại màn hình
+    @Override
+    protected void onResume() {
+        super.onResume();
+        allFoodItems = foodDao.getAllFoods();
+        foodAdapter.setFoodList(new ArrayList<>(allFoodItems));
+    }
+
     private void filterFoodByType(FoodItem.FoodType type) {
         List<FoodItem> filtered = new ArrayList<>();
         for (FoodItem item : allFoodItems) {
@@ -131,7 +133,6 @@ public class HomeActivity extends AppCompatActivity {
         foodAdapter.setFoodList(filtered);
     }
 
-    // Tô đậm nút lọc được chọn
     private void highlightFilter(Button selected) {
         btnHome.setBackgroundColor(Color.LTGRAY);
         btnFastFood.setBackgroundColor(Color.LTGRAY);
@@ -141,7 +142,6 @@ public class HomeActivity extends AppCompatActivity {
         selected.setBackgroundColor(Color.DKGRAY);
     }
 
-    // Mở activity có hiệu ứng mượt
     private void startActivityWithAnimation(Class<?> cls) {
         Intent intent = new Intent(this, cls);
         startActivity(intent);

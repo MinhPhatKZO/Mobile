@@ -100,6 +100,29 @@ public class FoodDao {
 
         return item;
     }
+    public void updateFood(FoodItem food) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", food.getName());
+        values.put("description", food.getDescription());
+        values.put("calories", food.getCalories());
+        values.put("price", food.getPrice());
+        values.put("time", food.getTime());
+        values.put("imageResId", food.getImageResId());
+        values.put("soldCount", food.getSoldCount());
+        values.put("likeCount", food.getLikeCount());
+        values.put("rating", food.getRating());
+        values.put("type", food.getType().toRawString());
+
+        db.update("foods", values, "id = ?", new String[]{String.valueOf(food.getId())});
+        db.close();
+    }
+
+    public void deleteFood(int id) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("foods", "id = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
 
 
 }

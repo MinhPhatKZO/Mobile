@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.projecttng.R;
-import com.example.projecttng.database.DBHelper;
+import com.example.projecttng.dao.UserDao;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class SignInActivity extends AppCompatActivity {
@@ -18,14 +18,15 @@ public class SignInActivity extends AppCompatActivity {
     private TextView signupText;
     private TextInputEditText usernameEditText, passwordEditText;
 
-    private DBHelper dbHelper; // Thêm DBHelper
+    private UserDao userDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Đảm bảo đúng tên file XML
+        setContentView(R.layout.activity_main); // layout đăng nhập
 
-        dbHelper = new DBHelper(this); // Khởi tạo DBHelper
+        userDao = new UserDao(this); // Khởi tạo DAO
+        userDao.insertDefaultAdminIfNotExists(); // ✅ Thêm admin nếu chưa có
 
         // Ánh xạ view
         btnSignIn = findViewById(R.id.btnSignIn);
@@ -33,7 +34,7 @@ public class SignInActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.username_edittext);
         passwordEditText = findViewById(R.id.password_edittext);
 
-        // Xử lý đăng nhập
+        // Đăng nhập
         btnSignIn.setOnClickListener(v -> {
             String username = usernameEditText.getText() != null ? usernameEditText.getText().toString().trim() : "";
             String password = passwordEditText.getText() != null ? passwordEditText.getText().toString().trim() : "";
@@ -43,20 +44,28 @@ public class SignInActivity extends AppCompatActivity {
                 return;
             }
 
-            // Kiểm tra tài khoản trong SQLite
-            boolean isValid = dbHelper.checkUserPass(username, password);
-            if (isValid) {
-                Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, HomeActivity.class));
-                finish(); // Không quay lại login sau khi đã vào home
+            if (userDao.isValidLogin(username, password)) {
+                String role = userDao.getUserRole(username);
+                Toast.makeText(this, "Đăng nhập thành công với quyền: " + role, Toast.LENGTH_SHORT).show();
+
+                if ("admin".equalsIgnoreCase(role)) {
+                    startActivity(new Intent(this, AdminDashboardActivity.class));
+                } else {
+                    startActivity(new Intent(this, HomeActivity.class));
+                }
+
+                finish();
             } else {
                 Toast.makeText(this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Chuyển sang màn hình đăng ký
+        // Chuyển sang đăng ký
         signupText.setOnClickListener(v -> {
             startActivity(new Intent(this, SignUpActivity.class));
         });
     }
-}
+
+
+    }
+

@@ -5,4 +5,10 @@
     <string name="time_icon">Time icon</string>
     <string name="profile">Profile</string>
     <string name="category_icon">Category icon</string>
+    <string-array name="food_types">
+        <item>Đồ ăn</item>
+        <item>Đồ uống</item>
+        <item>Tráng miệng</item>
+    </string-array>
+
 </resources>
