@@ -11,9 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projecttng.R;
 import com.example.projecttng.activity.FoodDetailActivity;
 import com.example.projecttng.model.FoodItem;
-import com.example.projecttng.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,18 +47,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.tvTime.setText("Thời gian: " + item.getTime());
         holder.imgFood.setImageResource(item.getImageResId());
 
+        // Gửi ID sang FoodDetailActivity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, FoodDetailActivity.class);
-            intent.putExtra("name", item.getName());
-            intent.putExtra("description", item.getDescription());
-            intent.putExtra("calories", item.getCalories());
-            intent.putExtra("price", item.getFormattedPrice());
-            intent.putExtra("time", item.getTime());
-            intent.putExtra("imageResId", item.getImageResId());
-            intent.putExtra("soldCount", item.getSoldCount());
-            intent.putExtra("likeCount", item.getLikeCount());
-            intent.putExtra("rating", item.getRating());
-            intent.putExtra("type", item.getType().getDisplayName());
+            intent.putExtra("id", item.getId()); // 🔥 Dùng ID để lấy dữ liệu từ SQLite
             context.startActivity(intent);
         });
     }
@@ -68,7 +60,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         return foodList.size();
     }
 
-    // Update the food list and notify UI
+    // Cập nhật danh sách món
     public void setFoodList(List<FoodItem> newList) {
         foodList.clear();
         if (newList != null) {
@@ -77,7 +69,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         notifyDataSetChanged();
     }
 
-    // Optional: get item at position
+    // Lấy item tại vị trí
     public FoodItem getItem(int position) {
         return (position >= 0 && position < foodList.size()) ? foodList.get(position) : null;
     }

@@ -1,15 +1,18 @@
 package com.example.projecttng.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecttng.model.FoodItem;
 import com.example.projecttng.R;
 import com.example.projecttng.adapter.CategoryFoodAdapter;
+import com.example.projecttng.dao.FoodDao;
+import com.example.projecttng.model.FoodItem;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -27,15 +30,27 @@ public class CategoryActivity extends AppCompatActivity {
     private Chip chipAll, chipFood, chipDrink;
     private TextView tvCategoryTitle, tvCategoryDescription, tvItemCount;
 
+    private FoodDao foodDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
 
+        foodDao = new FoodDao(this);
+        foodDao.insertSampleFoodsIfEmpty(); // ✅ Chỉ chèn mẫu nếu chưa có dữ liệu
+
         initViews();
-        loadCategoryData();
+        loadCategoryDataFromDB();
         setupRecyclerView();
         setupFilterListeners();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
     }
 
     private void initViews() {
@@ -48,7 +63,6 @@ public class CategoryActivity extends AppCompatActivity {
         tvCategoryDescription = findViewById(R.id.tv_category_description);
         tvItemCount = findViewById(R.id.tv_item_count);
 
-        // Nút ẩn/hiện bộ lọc
         findViewById(R.id.btn_filter_category).setOnClickListener(v -> {
             chipGroupFilter.setVisibility(
                     chipGroupFilter.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE
@@ -56,25 +70,22 @@ public class CategoryActivity extends AppCompatActivity {
         });
     }
 
-    private void loadCategoryData() {
-        allFoodList = new ArrayList<>();
-        displayList = new ArrayList<>();
-
-        allFoodList.add(new FoodItem("Sushi Maki", "Sushi tươi ngon chuẩn vị Nhật", "100kcal", "45.000đ", "15min", R.drawable.sushi, 0, 0, 4.5f, FoodItem.FoodType.FOOD));
-        allFoodList.add(new FoodItem("Bánh Mì", "Bánh mì giòn rụm thơm ngon", "200kcal", "25.000đ", "30min", R.drawable.banhmi, 0, 0, 4.8f, FoodItem.FoodType.FOOD));
-        allFoodList.add(new FoodItem("Gà Rán", "Gà rán giòn tan", "1500kcal", "40.000đ", "10min", R.drawable.garan, 0, 0, 4.3f, FoodItem.FoodType.FOOD));
-        allFoodList.add(new FoodItem("Bún Bò", "Sợi bún hòa huyện với nước lèo béo ngậy", "2000kcal", "40.000đ", "10min", R.drawable.bunbo, 0, 0, 4.3f, FoodItem.FoodType.FOOD));
-
-        allFoodList.add(new FoodItem("Trà Sữa", "Trà sữa béo ngậy, vị thơm", "150kcal", "30.000đ", "5min", R.drawable.trasua, 0, 0, 4.7f, FoodItem.FoodType.DRINK));
-        allFoodList.add(new FoodItem("Cafe Đá", "Cafe đá đậm vị", "5kcal", "18.000đ", "3min", R.drawable.trada, 0, 0, 4.3f, FoodItem.FoodType.DRINK));
-
-        displayList.addAll(allFoodList); // Hiển thị mặc định
+    private void loadCategoryDataFromDB() {
+        allFoodList = foodDao.getAllFoods(); // 👉 Lấy từ SQLite
+        displayList = new ArrayList<>(allFoodList);
     }
 
     private void setupRecyclerView() {
-        foodAdapter = new CategoryFoodAdapter(displayList);
+        foodAdapter = new CategoryFoodAdapter(this, displayList, () -> {
+            // 👉 Khi người dùng nhấn "Thêm", chuyển sang ShoppingCartActivity
+            startActivity(new Intent(CategoryActivity.this, ShoppingCartActivity.class));
+            overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+        });
+
         rvCategoryItems.setLayoutManager(new LinearLayoutManager(this));
         rvCategoryItems.setAdapter(foodAdapter);
+
+        updateCategoryInfo("Tất cả", "Tất cả món ăn và đồ uống", displayList.size());
     }
 
     private void setupFilterListeners() {
@@ -82,9 +93,9 @@ public class CategoryActivity extends AppCompatActivity {
             if (checkedId == R.id.chip_all) {
                 filterAll();
             } else if (checkedId == R.id.chip_food) {
-                filterFood();
+                filterByType(FoodItem.FoodType.FOOD);
             } else if (checkedId == R.id.chip_drink) {
-                filterDrink();
+                filterByType(FoodItem.FoodType.DRINK);
             }
         });
     }
@@ -96,26 +107,20 @@ public class CategoryActivity extends AppCompatActivity {
         updateCategoryInfo("Tất cả", "Tất cả món ăn và đồ uống", displayList.size());
     }
 
-    private void filterFood() {
+    private void filterByType(FoodItem.FoodType type) {
         displayList.clear();
         for (FoodItem item : allFoodList) {
-            if (item.getType() == FoodItem.FoodType.FOOD) {
+            if (item.getType() == type) {
                 displayList.add(item);
             }
         }
         foodAdapter.notifyDataSetChanged();
-        updateCategoryInfo("Đồ ăn", "Các món ăn nhanh phổ biến", displayList.size());
-    }
 
-    private void filterDrink() {
-        displayList.clear();
-        for (FoodItem item : allFoodList) {
-            if (item.getType() == FoodItem.FoodType.DRINK) {
-                displayList.add(item);
-            }
+        if (type == FoodItem.FoodType.FOOD) {
+            updateCategoryInfo("Đồ ăn", "Các món ăn nhanh phổ biến", displayList.size());
+        } else {
+            updateCategoryInfo("Đồ uống", "Các loại đồ uống giải khát", displayList.size());
         }
-        foodAdapter.notifyDataSetChanged();
-        updateCategoryInfo("Đồ uống", "Các loại đồ uống giải khát", displayList.size());
     }
 
     private void updateCategoryInfo(String title, String description, int itemCount) {

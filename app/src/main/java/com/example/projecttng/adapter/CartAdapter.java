@@ -10,8 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecttng.model.FoodItem;
 import com.example.projecttng.R;
+import com.example.projecttng.dao.CartDao;
+import com.example.projecttng.model.FoodItem;
 
 import java.util.List;
 
@@ -21,14 +22,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         void onCartChanged();
     }
 
-    private Context context;
-    private List<FoodItem> cartItems;
-    private OnCartChangedListener listener;
+    private final Context context;
+    private final List<FoodItem> cartItems;
+    private final OnCartChangedListener listener;
+    private final CartDao cartDao;
 
     public CartAdapter(Context context, List<FoodItem> cartItems, OnCartChangedListener listener) {
         this.context = context;
         this.cartItems = cartItems;
         this.listener = listener;
+        this.cartDao = new CartDao(context);
     }
 
     @NonNull
@@ -40,37 +43,41 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        FoodItem currentItem = cartItems.get(position);
+        FoodItem item = cartItems.get(position);
 
-        holder.tvName.setText(currentItem.getName());
-        holder.tvQuantity.setText(String.valueOf(currentItem.getQuantity()));
-        holder.tvPrice.setText(formatCurrency(currentItem.getParsedPrice() * currentItem.getQuantity()));
-        holder.imgFood.setImageResource(currentItem.getImageResId());
+        holder.tvName.setText(item.getName());
+        holder.tvQuantity.setText(String.valueOf(item.getQuantity()));
+        holder.tvPrice.setText(formatCurrency(item.getParsedPrice() * item.getQuantity()));
+        holder.imgFood.setImageResource(item.getImageResId());
 
-        // Nút cộng
+        // ➕ Tăng số lượng
         holder.btnPlus.setOnClickListener(v -> {
             int pos = holder.getAdapterPosition();
             if (pos == RecyclerView.NO_POSITION) return;
 
-            FoodItem item = cartItems.get(pos);
-            item.setQuantity(item.getQuantity() + 1);
+            FoodItem food = cartItems.get(pos);
+            int newQty = food.getQuantity() + 1;
+            food.setQuantity(newQty);
+
+            cartDao.updateQuantityByFoodId(food.getId(), newQty);
             notifyItemChanged(pos);
             listener.onCartChanged();
         });
 
-        // Nút trừ (xoá nếu = 0)
+        // ➖ Giảm số lượng
         holder.btnMinus.setOnClickListener(v -> {
             int pos = holder.getAdapterPosition();
             if (pos == RecyclerView.NO_POSITION) return;
 
-            FoodItem item = cartItems.get(pos);
-            int newQuantity = item.getQuantity() - 1;
+            FoodItem food = cartItems.get(pos);
+            int newQty = food.getQuantity() - 1;
 
-            if (newQuantity > 0) {
-                item.setQuantity(newQuantity);
+            if (newQty > 0) {
+                food.setQuantity(newQty);
+                cartDao.updateQuantityByFoodId(food.getId(), newQty);
                 notifyItemChanged(pos);
             } else {
-                CartManager.removeItem(item.getId());
+                cartDao.removeFromCart(food.getId());
                 cartItems.remove(pos);
                 notifyItemRemoved(pos);
                 notifyItemRangeChanged(pos, cartItems.size());
@@ -83,6 +90,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @Override
     public int getItemCount() {
         return cartItems.size();
+    }
+
+    private String formatCurrency(int amount) {
+        return String.format("%,d đ", amount).replace(",", ".");
     }
 
     public static class CartViewHolder extends RecyclerView.ViewHolder {
@@ -98,9 +109,5 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             btnPlus = itemView.findViewById(R.id.btn_plus);
             btnMinus = itemView.findViewById(R.id.btn_minus);
         }
-    }
-
-    private String formatCurrency(int amount) {
-        return String.format("%,d đ", amount).replace(",", ".");
     }
 }

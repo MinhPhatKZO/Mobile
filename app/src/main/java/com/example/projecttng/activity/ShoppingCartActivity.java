@@ -2,23 +2,25 @@ package com.example.projecttng.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projecttng.R;
 import com.example.projecttng.adapter.CartAdapter;
-import com.example.projecttng.adapter.CartManager;
+import com.example.projecttng.dao.CartDao;
+import com.example.projecttng.dao.OrderDao;
+import com.example.projecttng.dao.OrderDetailDao;
 import com.example.projecttng.model.FoodItem;
+import com.example.projecttng.model.Order;
+import com.example.projecttng.model.OrderDetail;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ShoppingCartActivity extends AppCompatActivity {
 
@@ -26,13 +28,15 @@ public class ShoppingCartActivity extends AppCompatActivity {
     private TextView tvTitle, tvItemCount, tvTotalPrice;
     private Button btnAddMore, btnCheckout;
     private RadioGroup rgPayment;
-    private RadioButton rbCod, rbMomo, rbVnpay;
     private RecyclerView rvCartItems;
 
+    private CartDao cartDao;
     private CartAdapter cartAdapter;
+    private List<FoodItem> cartItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shoppingcart);
 
@@ -44,57 +48,44 @@ public class ShoppingCartActivity extends AppCompatActivity {
         btnAddMore = findViewById(R.id.btn_add_more);
         btnCheckout = findViewById(R.id.btn_checkout);
         rgPayment = findViewById(R.id.rg_payment);
-        rbCod = findViewById(R.id.rb_cod);
-        rbMomo = findViewById(R.id.rb_momo);
-        rbVnpay = findViewById(R.id.rb_vnpay);
         rvCartItems = findViewById(R.id.rv_cart_items);
 
-        // Gán adapter và dữ liệu
+        cartDao = new CartDao(this);
+
         setupCart();
 
-        // Nút quay lại
-        btnBack.setOnClickListener(view -> finish());
+        btnBack.setOnClickListener(view -> {
+            finish();
+            overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+        });
 
-        // Nút chọn thêm món → về CategoryActivity
         btnAddMore.setOnClickListener(view -> {
             Intent intent = new Intent(this, CategoryActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
         });
 
-        // Nút thanh toán
-        btnCheckout.setOnClickListener(view -> {
-            int selectedId = rgPayment.getCheckedRadioButtonId();
-
-            if (selectedId == -1) {
-                Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            String method = "";
-            if (selectedId == R.id.rb_cod) method = "COD";
-            else if (selectedId == R.id.rb_momo) method = "Momo";
-            else if (selectedId == R.id.rb_vnpay) method = "VNPay";
-
-            Toast.makeText(this, "Bạn đã chọn thanh toán bằng " + method, Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(this, OrderActivity.class);
-            startActivity(intent);
-        });
+        btnCheckout.setOnClickListener(view -> handleCheckout());
     }
 
     private void setupCart() {
-        List<FoodItem> items = CartManager.getInstance().getCartItems();
+        cartItemList = cartDao.getAllCartItems();
 
-        cartAdapter = new CartAdapter(this, items, this::updateCartSummary);
+        cartAdapter = new CartAdapter(this, cartItemList, this::updateCartSummary);
         rvCartItems.setLayoutManager(new LinearLayoutManager(this));
         rvCartItems.setAdapter(cartAdapter);
 
-        updateCartSummary(); // Gọi cập nhật số món và giá tổng ban đầu
+        updateCartSummary();
     }
 
     private void updateCartSummary() {
-        int totalQuantity = CartManager.getInstance().getTotalQuantity();
-        int totalPrice = CartManager.getInstance().getTotalPrice();
+        int totalQuantity = 0;
+        int totalPrice = 0;
+
+        for (FoodItem item : cartItemList) {
+            totalQuantity += item.getQuantity();
+            totalPrice += item.getParsedPrice() * item.getQuantity();
+        }
 
         tvItemCount.setText(totalQuantity + " Món đang chọn");
         tvTotalPrice.setText(formatCurrency(totalPrice));
@@ -102,5 +93,68 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
     private String formatCurrency(int amount) {
         return String.format("%,d đ", amount).replace(",", ".");
+    }
+
+    // ✅ Xử lý khi đặt hàng
+    private void handleCheckout() {
+        int selectedId = rgPayment.getCheckedRadioButtonId();
+
+        if (selectedId == -1) {
+            Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String method = "";
+        if (selectedId == R.id.rb_cod) method = "COD";
+        else if (selectedId == R.id.rb_momo) method = "Momo";
+        else if (selectedId == R.id.rb_vnpay) method = "VNPay";
+
+        int totalPrice = 0;
+        for (FoodItem item : cartItemList) {
+            totalPrice += item.getParsedPrice() * item.getQuantity();
+        }
+
+        if (cartItemList.isEmpty()) {
+            Toast.makeText(this, "Giỏ hàng trống!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int userId = 1; // TODO: thay bằng user thực từ session
+
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+        Order order = new Order(userId, totalPrice, method, date);
+
+        OrderDao orderDao = new OrderDao(this);
+        long orderId = orderDao.insertOrder(order);
+
+        if (orderId == -1) {
+            Toast.makeText(this, "Đặt hàng thất bại!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        List<OrderDetail> detailList = new ArrayList<>();
+        for (FoodItem item : cartItemList) {
+            OrderDetail detail = new OrderDetail();
+            detail.setOrderId((int) orderId);
+            detail.setFoodId(item.getId());
+            detail.setQuantity(item.getQuantity());
+            detailList.add(detail);
+        }
+
+        OrderDetailDao detailDao = new OrderDetailDao(this);
+        boolean success = detailDao.insertMultipleOrderDetails(detailList);
+
+        if (!success) {
+            Toast.makeText(this, "Lỗi khi lưu chi tiết đơn hàng!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        cartDao.clearCart();
+
+        Toast.makeText(this, "Đặt hàng thành công bằng " + method, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, OrderActivity.class); // nên tạo màn này
+        intent.putExtra("orderId", (int) orderId);
+        startActivity(intent);
+        finish();
     }
 }

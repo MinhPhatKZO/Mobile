@@ -1,7 +1,6 @@
 package com.example.projecttng.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +12,29 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecttng.model.FoodItem;
 import com.example.projecttng.R;
-import com.example.projecttng.activity.ShoppingCartActivity;
+import com.example.projecttng.dao.CartDao;
+import com.example.projecttng.model.FoodItem;
 
 import java.util.List;
 
 public class CategoryFoodAdapter extends RecyclerView.Adapter<CategoryFoodAdapter.ViewHolder> {
-    private List<FoodItem> foodItems;
-    private Context context;
 
-    public CategoryFoodAdapter(List<FoodItem> foodItems) {
+    public interface OnAddToCartListener {
+        void onAdd(); // Callback để Activity xử lý khi thêm món
+    }
+
+    private final List<FoodItem> foodItems;
+    private final Context context;
+    private final CartDao cartDao;
+    private final OnAddToCartListener listener;
+
+    // ✅ Constructor mới có tham số listener
+    public CategoryFoodAdapter(Context context, List<FoodItem> foodItems, OnAddToCartListener listener) {
+        this.context = context;
         this.foodItems = foodItems;
+        this.cartDao = new CartDao(context);
+        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -46,7 +56,6 @@ public class CategoryFoodAdapter extends RecyclerView.Adapter<CategoryFoodAdapte
     @NonNull
     @Override
     public CategoryFoodAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.item_category, parent, false);
         return new ViewHolder(view);
     }
@@ -56,7 +65,7 @@ public class CategoryFoodAdapter extends RecyclerView.Adapter<CategoryFoodAdapte
         FoodItem item = foodItems.get(position);
 
         holder.tvFoodName.setText(item.getName());
-        holder.tvPrice.setText(item.getPrice());
+        holder.tvPrice.setText(item.getFormattedPrice());
         holder.imgFood.setImageResource(item.getImageResId());
 
         if (holder.tvSold != null) {
@@ -67,9 +76,9 @@ public class CategoryFoodAdapter extends RecyclerView.Adapter<CategoryFoodAdapte
             holder.tvLikes.setText(item.getLikeCount() + " thích");
         }
 
-        // Khi click vào nút "+"
-        holder.btnAdd.setOnClickListener(v -> {
-            FoodItem newItem = new FoodItem(
+        View.OnClickListener addToCartListener = v -> {
+            FoodItem selectedItem = new FoodItem(
+                    item.getId(),
                     item.getName(),
                     item.getDescription(),
                     item.getCalories(),
@@ -78,44 +87,25 @@ public class CategoryFoodAdapter extends RecyclerView.Adapter<CategoryFoodAdapte
                     item.getImageResId(),
                     item.getSoldCount(),
                     item.getLikeCount(),
-                    item.getRating()
+                    item.getRating(),
+                    item.getType()
             );
-            newItem.setQuantity(1);
+            selectedItem.setQuantity(1);
 
-            CartManager.addItem(newItem);
-
+            cartDao.addOrUpdateItem(selectedItem);
             Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(context, ShoppingCartActivity.class);
-            context.startActivity(intent);
-        });
+            if (listener != null) {
+                listener.onAdd(); // Gọi callback khi thêm món
+            }
+        };
 
-        // Khi click vào toàn bộ item
-        holder.itemView.setOnClickListener(v -> {
-            FoodItem newItem = new FoodItem(
-                    item.getName(),
-                    item.getDescription(),
-                    item.getCalories(),
-                    item.getPrice(),
-                    item.getTime(),
-                    item.getImageResId(),
-                    item.getSoldCount(),
-                    item.getLikeCount(),
-                    item.getRating()
-            );
-            newItem.setQuantity(1);
-
-            CartManager.addItem(newItem);
-
-            Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(context, ShoppingCartActivity.class);
-            context.startActivity(intent);
-        });
+        holder.btnAdd.setOnClickListener(addToCartListener);
+        holder.itemView.setOnClickListener(addToCartListener);
     }
 
     @Override
     public int getItemCount() {
-        return foodItems.size();
+        return foodItems != null ? foodItems.size() : 0;
     }
 }

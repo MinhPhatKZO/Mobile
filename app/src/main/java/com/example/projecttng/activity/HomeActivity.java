@@ -15,9 +15,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecttng.model.FoodItem;
 import com.example.projecttng.R;
 import com.example.projecttng.adapter.FoodAdapter;
+import com.example.projecttng.dao.FoodDao;
+import com.example.projecttng.model.FoodItem;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -45,17 +46,19 @@ public class HomeActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        // Load dữ liệu mẫu
-        loadSampleFoodItems();
+        // Lấy dữ liệu từ SQLite
+        FoodDao foodDao = new FoodDao(this);
+        foodDao.insertSampleFoodsIfEmpty(); // ✅ Chỉ chèn dữ liệu mẫu nếu chưa có
+        allFoodItems = foodDao.getAllFoods();
 
-        // Adapter
+        // Gắn adapter
         foodAdapter = new FoodAdapter(this, new ArrayList<>(allFoodItems));
         recyclerView.setAdapter(foodAdapter);
 
         // Mở menu
         findViewById(R.id.btn_menu).setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
-        // Xử lý click profile
+        // Xử lý click Profile
         View btnProfile = findViewById(R.id.btn_profile);
         if (btnProfile != null) {
             btnProfile.setOnClickListener(v -> startActivityWithAnimation(UserProfileActivity.class));
@@ -66,35 +69,28 @@ public class HomeActivity extends AppCompatActivity {
             iconProfile.setOnClickListener(v -> startActivityWithAnimation(UserProfileActivity.class));
         }
 
-        // Xử lý các mục trong NavigationView
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.nav_home) {
-                    startActivity(new Intent(HomeActivity.this, HomeActivity.class)); // Quay lại màn hình chính
-                } else if (id == R.id.nav_favorite) {
-                    startActivity(new Intent(HomeActivity.this, FavoriteActivity.class)); // Chuyển đến danh mục
-                } else if (id == R.id.nav_search) {
-                    startActivity(new Intent(HomeActivity.this, SearchActivity.class)); // Chuyển đến sản phẩm
-                } else if (id == R.id.nav_profile) {
-                    startActivity(new Intent(HomeActivity.this, UserProfileActivity.class)); // Hồ sơ người dùng
-                }
-                else if (id == R.id.nav_category) {
-                    startActivity(new Intent(HomeActivity.this, CategoryActivity.class));
-                } else if (id == R.id.nav_product) {
-                    startActivity(new Intent(HomeActivity.this, ProductActivity.class));
-                } else if (id == R.id.nav_order) {
-                    startActivity(new Intent(HomeActivity.this, OrderActivity.class));
-                } else if (id == R.id.nav_shopping_cart) {
-                    startActivity(new Intent(HomeActivity.this, ShoppingCartActivity.class));
-                }
-
-
-                drawerLayout.closeDrawer(GravityCompat.START);
-                return true;
+        // Navigation menu
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, HomeActivity.class));
+            } else if (id == R.id.nav_favorite) {
+                startActivity(new Intent(this, FavoriteActivity.class));
+            } else if (id == R.id.nav_search) {
+                startActivity(new Intent(this, SearchActivity.class));
+            } else if (id == R.id.nav_profile) {
+                startActivity(new Intent(this, UserProfileActivity.class));
+            } else if (id == R.id.nav_category) {
+                startActivity(new Intent(this, CategoryActivity.class));
+            } else if (id == R.id.nav_product) {
+                startActivity(new Intent(this, ProductActivity.class));
+            } else if (id == R.id.nav_order) {
+                startActivity(new Intent(this, OrderActivity.class));
+            } else if (id == R.id.nav_shopping_cart) {
+                startActivity(new Intent(this, ShoppingCartActivity.class));
             }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
 
         // Gán nút lọc
@@ -124,7 +120,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    // Lọc món theo loại
+    // Lọc theo loại
     private void filterFoodByType(FoodItem.FoodType type) {
         List<FoodItem> filtered = new ArrayList<>();
         for (FoodItem item : allFoodItems) {
@@ -135,7 +131,7 @@ public class HomeActivity extends AppCompatActivity {
         foodAdapter.setFoodList(filtered);
     }
 
-    // Đổi màu nút được chọn
+    // Tô đậm nút lọc được chọn
     private void highlightFilter(Button selected) {
         btnHome.setBackgroundColor(Color.LTGRAY);
         btnFastFood.setBackgroundColor(Color.LTGRAY);
@@ -145,19 +141,9 @@ public class HomeActivity extends AppCompatActivity {
         selected.setBackgroundColor(Color.DKGRAY);
     }
 
-    // Dữ liệu mẫu
-    private void loadSampleFoodItems() {
-        allFoodItems.add(new FoodItem("Sushi Maki", "Sushi tươi ngon chuẩn vị Nhật", "100kcal", "40.000đ", "60min", R.drawable.sushi, 100, 10, 4.8f, FoodItem.FoodType.FOOD));
-        allFoodItems.add(new FoodItem("Bánh Mì", "Bánh mì giòn rụm thơm ngon", "200kcal", "25.000đ", "30min", R.drawable.banhmi, 100, 10, 4.5f, FoodItem.FoodType.FOOD));
-        allFoodItems.add(new FoodItem("Gà Rán", "Gà rán giòn tan thơm ngon", "1500kcal", "40.000đ", "60min", R.drawable.garan, 80, 8, 4.6f, FoodItem.FoodType.FOOD));
-        allFoodItems.add(new FoodItem("Bún Bò", "Sợi bún hòa huyện với nước lèo béo ngậy", "2000kcal", "35.000đ", "30min", R.drawable.bunbo, 90, 9, 4.7f, FoodItem.FoodType.FOOD));
-        allFoodItems.add(new FoodItem("Trà Đá", "Trà đá mát lạnh", "10kcal", "5.000đ", "2min", R.drawable.trada, 50, 5, 4.0f, FoodItem.FoodType.DRINK));
-        allFoodItems.add(new FoodItem("Trà Sữa", "Trà sữa béo ngậy, vị thơm", "150kcal", "30.000đ", "10min", R.drawable.trasua, 60, 6, 4.2f, FoodItem.FoodType.DRINK));
-    }
-
-    // Mở Activity có hiệu ứng mượt
+    // Mở activity có hiệu ứng mượt
     private void startActivityWithAnimation(Class<?> cls) {
-        Intent intent = new Intent(HomeActivity.this, cls);
+        Intent intent = new Intent(this, cls);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
