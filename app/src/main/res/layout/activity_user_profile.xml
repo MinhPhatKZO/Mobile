@@ -2,16 +2,22 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="#FFFFFF"
     android:padding="16dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
 
-        <!-- Avatar -->
+    <LinearLayout
+        android:id="@+id/layoutUserProfile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="#FFFFFF"
+        android:padding="16dp">
+
+
+    <!-- Avatar -->
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -29,6 +35,7 @@
             android:layout_marginTop="24dp">
 
             <LinearLayout
+                android:id="@+id/btnProfile"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -49,6 +56,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btnNotificationSetting"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -70,9 +78,6 @@
         </LinearLayout>
 
         <!-- Tiêu đề -->
-
-        <!-- Danh sách chức năng -->
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,34 +87,16 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
+        <!-- Danh sách chức năng -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="16dp">
 
-            <!-- Bảo mật -->
-            <LinearLayout
-                style="@style/SettingItemLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_lock" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:text="Bảo mật vân tay, sinh trắc học"
-                    android:textColor="#000000"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
             <!-- Trung tâm trợ giúp -->
             <LinearLayout
+                android:id="@+id/btnHelpCenter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -138,6 +125,7 @@
 
             <!-- Đổi hình nền -->
             <LinearLayout
+                android:id="@+id/btnChangeBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -166,6 +154,7 @@
 
             <!-- Ngôn ngữ -->
             <LinearLayout
+                android:id="@+id/btnLanguage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -213,6 +202,7 @@
             android:weightSum="2">
 
             <Button
+                android:id="@+id/btnLogout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -226,6 +216,7 @@
                 android:background="#000000" />
 
             <Button
+                android:id="@+id/btnSwitchAccount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -269,5 +260,6 @@
                 android:layout_margin="8dp"
                 android:src="@drawable/ic_tiktok" />
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>
