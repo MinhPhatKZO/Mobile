@@ -1,56 +1,59 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="6dp"
-    app:cardUseCompatPadding="true"
-    app:cardPreventCornerOverlap="true">
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/back_subtract">
+        android:background="@drawable/back_subtract"
+        android:padding="10dp">
 
+        <!-- Ảnh món ăn -->
         <ImageView
             android:id="@+id/iv_food"
-            android:layout_width="298dp"
-            android:layout_height="155dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="20dp"
-            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
             android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
             android:src="@drawable/ic_launcher_background" />
 
+        <!-- Tên món -->
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:ellipsize="end"
+            android:text="Tên món ăn"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#212121"
             android:maxLines="1"
-            android:text="Sushi"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:ellipsize="end" />
 
+        <!-- Mô tả món -->
         <TextView
             android:id="@+id/tv_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:text="Sushi Maki"
-            android:textColor="#5E35B1"
-            android:textSize="14sp" />
+            android:layout_marginTop="2dp"
+            android:text="Mô tả ngắn"
+            android:textSize="13sp"
+            android:textColor="#666666"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
+        <!-- Dòng thông tin -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="3">
 
@@ -59,14 +62,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_marginEnd="4dp"
-                    android:contentDescription="@string/calories_icon"
                     android:src="@drawable/ic_calories"
                     android:tint="#FF5722" />
 
@@ -75,25 +77,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="100kcal"
-                    android:textColor="#FF5722"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:textColor="#444444"
+                    android:maxLines="1" />
             </LinearLayout>
 
-            <!-- Giá tiền -->
+            <!-- Giá -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_marginEnd="4dp"
-                    android:contentDescription="@string/price_icon"
                     android:src="@drawable/ic_price"
                     android:tint="#4CAF50" />
 
@@ -102,8 +102,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="40.000đ"
-                    android:textColor="#FF5722"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:textColor="#444444"
+                    android:maxLines="1" />
             </LinearLayout>
 
             <!-- Thời gian -->
@@ -111,14 +112,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_marginEnd="4dp"
-                    android:contentDescription="@string/time_icon"
                     android:src="@drawable/ic_time"
                     android:tint="#2196F3" />
 
@@ -126,9 +126,10 @@
                     android:id="@+id/tv_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="60min"
-                    android:textColor="#FF5722"
-                    android:textSize="12sp" />
+                    android:text="30min"
+                    android:textSize="12sp"
+                    android:textColor="#444444"
+                    android:maxLines="1" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

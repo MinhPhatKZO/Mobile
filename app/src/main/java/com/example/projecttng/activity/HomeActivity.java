@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +32,6 @@ public class HomeActivity extends AppCompatActivity {
     private List<FoodItem> allFoodItems = new ArrayList<>();
 
     private Button btnHome, btnFastFood, btnDessert, btnDrink;
-
     private FoodDao foodDao;
 
     @Override
@@ -42,7 +42,7 @@ public class HomeActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         recyclerView = findViewById(R.id.rv_food);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         foodDao = new FoodDao(this);
         foodDao.insertSampleFoodsIfEmpty(); // ✅ chỉ chèn dữ liệu nếu rỗng
@@ -61,6 +61,12 @@ public class HomeActivity extends AppCompatActivity {
         ImageView iconProfile = findViewById(R.id.icon_profile);
         if (iconProfile != null) {
             iconProfile.setOnClickListener(v -> startActivityWithAnimation(UserProfileActivity.class));
+        }
+
+        // ✅ Thêm xử lý khi nhấn vào icon_foodlist để mở ChatActivity
+        ImageView iconFoodList = findViewById(R.id.icon_foodlist);
+        if (iconFoodList != null) {
+            iconFoodList.setOnClickListener(v -> startActivityWithAnimation(ChatActivity.class));
         }
 
         navigationView.setNavigationItemSelectedListener(item -> {
@@ -115,7 +121,6 @@ public class HomeActivity extends AppCompatActivity {
         highlightFilter(btnHome); // Mặc định chọn btnHome
     }
 
-    // Tự động cập nhật danh sách món ăn mới khi quay lại màn hình
     @Override
     protected void onResume() {
         super.onResume();
@@ -138,7 +143,6 @@ public class HomeActivity extends AppCompatActivity {
         btnFastFood.setBackgroundColor(Color.LTGRAY);
         btnDessert.setBackgroundColor(Color.LTGRAY);
         btnDrink.setBackgroundColor(Color.LTGRAY);
-
         selected.setBackgroundColor(Color.DKGRAY);
     }
 

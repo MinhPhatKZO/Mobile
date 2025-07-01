@@ -6,9 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DBNAME = "Nhom4Mobile.db";
+    public static final int DB_VERSION = 2; // Tăng version lên để upgrade database
 
     public DBHelper(Context context) {
-        super(context, DBNAME, null, 1);
+        super(context, DBNAME, null, DB_VERSION);
     }
 
     @Override
@@ -57,15 +58,24 @@ public class DBHelper extends SQLiteOpenHelper {
                 "quantity INTEGER," +
                 "FOREIGN KEY(orderId) REFERENCES orders(id)," +
                 "FOREIGN KEY(foodId) REFERENCES foods(id))");
+
+        // ✅ Bảng tin nhắn chat
+        db.execSQL("CREATE TABLE IF NOT EXISTS chat_messages (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "message TEXT," +
+                "is_user INTEGER," +
+                "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Xoá tất cả bảng khi nâng cấp (hoặc bạn có thể xử lý nâng cấp từng bảng riêng)
         db.execSQL("DROP TABLE IF EXISTS users");
         db.execSQL("DROP TABLE IF EXISTS foods");
         db.execSQL("DROP TABLE IF EXISTS cart");
         db.execSQL("DROP TABLE IF EXISTS orders");
         db.execSQL("DROP TABLE IF EXISTS order_details");
+        db.execSQL("DROP TABLE IF EXISTS chat_messages"); // Thêm dòng này để cập nhật bảng chat
         onCreate(db);
     }
 }
