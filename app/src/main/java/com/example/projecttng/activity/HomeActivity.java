@@ -75,9 +75,8 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(this, HomeActivity.class));
             } else if (id == R.id.nav_favorite) {
                 startActivity(new Intent(this, FavoriteActivity.class));
-            } else if (id == R.id.nav_search) {
-                startActivity(new Intent(this, SearchActivity.class));
-            } else if (id == R.id.nav_profile) {
+            }
+             else if (id == R.id.nav_profile) {
                 startActivity(new Intent(this, UserProfileActivity.class));
             } else if (id == R.id.nav_category) {
                 startActivity(new Intent(this, CategoryActivity.class));
