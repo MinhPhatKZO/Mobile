@@ -39,8 +39,7 @@ public class ChatActivity extends AppCompatActivity {
     private ChatAdapter adapter;
     private ChatDao chatDao;
 
-    // SAI - nên xóa
-    String apiKey = "sk-...";  // <-- Đây là nguyên nhân
+    String apiKey = System.getenv("OPENAI_API_KEY"); // <-- an toàn hơn
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
