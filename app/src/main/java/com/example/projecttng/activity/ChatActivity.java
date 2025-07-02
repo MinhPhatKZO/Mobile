@@ -39,7 +39,8 @@ public class ChatActivity extends AppCompatActivity {
     private ChatAdapter adapter;
     private ChatDao chatDao;
 
-    private static final String OPENAI_API_KEY = "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"; // Thay bằng key thật
+    // SAI - nên xóa
+    String apiKey = "sk-...";  // <-- Đây là nguyên nhân
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
