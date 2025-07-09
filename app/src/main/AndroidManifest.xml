@@ -18,7 +18,7 @@
 
         <!-- SignIn là màn hình đầu tiên khởi chạy -->
         <activity
-            android:name=".activity.SignInActivity"
+            android:name=".activity.auth.SignInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,12 +28,12 @@
 
         <!-- SignUp sẽ quay về SignIn -->
         <activity
-            android:name=".activity.SignUpActivity"
+            android:name=".activity.auth.SignUpActivity"
             android:exported="false"
-            android:parentActivityName=".activity.SignInActivity" >
+            android:parentActivityName=".activity.auth.SignInActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.SignInActivity" />
+                android:value=".activity.auth.SignInActivity" />
         </activity>
 
         <!-- MainActivity: chỉ vào sau khi đăng nhập -->
@@ -42,68 +42,69 @@
             android:exported="false" />
 
         <activity
-            android:name=".activity.HomeActivity"
+            android:name=".activity.ui.HomeActivity"
             android:exported="false" />
 
         <activity
-            android:name=".activity.CategoryActivity"
+            android:name=".activity.ui.CategoryActivity"
             android:exported="false" />
 
         <activity
-            android:name=".activity.OrderActivity"
+            android:name=".activity.ui.OrderActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.ProductActivity"
+            android:name=".activity.ui.ProductActivity"
             android:exported="false" />
 
         <activity
-            android:name=".activity.ShoppingCartActivity"
+            android:name=".activity.ui.ShoppingCartActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.UserProfileActivity"
+            android:name=".activity.ui.UserProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.FavoriteActivity"
+            android:name=".activity.ui.FavoriteActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.SearchActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.FoodDetailActivity"
+            android:name=".activity.ui.FoodDetailActivity"
             android:exported="false" />
         <!-- Admin dashboard -->
         <activity
-            android:name=".activity.AdminDashboardActivity"
+            android:name=".activity.admin.AdminDashboardActivity"
             android:exported="false" />
 
         <!-- Quản lý người dùng -->
         <activity
-            android:name=".activity.ManageUsersActivity"
+            android:name=".activity.admin.ManageUsersActivity"
             android:exported="false" />
 
         <!-- Quản lý món ăn -->
         <activity
-            android:name=".activity.ManageFoodsActivity"
+            android:name=".activity.admin.ManageFoodsActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.AddFoodActivity"
+            android:name=".activity.admin.AddFoodActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.EditFoodActivity"
+            android:name=".activity.admin.EditFoodActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.EditProfileActivity"
+            android:name=".activity.ui.EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.NotificationSettingActivity"
+            android:name=".activity.ui.NotificationSettingActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.HelpCenterActivity"
+            android:name=".activity.sp.HelpCenterActivity"
             android:exported="false" />
         <!-- Chatbox AI -->
         <activity
-            android:name=".activity.ChatActivity"
+            android:name=".activity.sp.ChatActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.ui.ChefFoodsActivity"
+            android:exported="false" />
+
 
     </application>
 

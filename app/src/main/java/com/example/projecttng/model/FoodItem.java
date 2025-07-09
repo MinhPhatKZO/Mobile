@@ -15,11 +15,12 @@ public class FoodItem implements Serializable {
     private float rating;
     private FoodType type;
     private int quantity = 1;
+    private int chefId;
 
     // Default constructor
     public FoodItem() {}
 
-    // Constructor for inserting new food (without id)
+    // Constructor without chefId (legacy)
     public FoodItem(String name, String description, String calories, String price, String time,
                     int imageResId, int soldCount, int likeCount, float rating, FoodType type) {
         this.name = name;
@@ -32,9 +33,26 @@ public class FoodItem implements Serializable {
         this.likeCount = likeCount;
         this.rating = rating;
         this.type = type;
+        this.chefId = -1;
     }
 
-    // Constructor for reading from database (with id)
+    // Constructor with chefId
+    public FoodItem(String name, String description, String calories, String price, String time,
+                    int imageResId, int soldCount, int likeCount, float rating, FoodType type, int chefId) {
+        this.name = name;
+        this.description = description;
+        this.calories = calories;
+        this.price = price;
+        this.time = time;
+        this.imageResId = imageResId;
+        this.soldCount = soldCount;
+        this.likeCount = likeCount;
+        this.rating = rating;
+        this.type = type;
+        this.chefId = chefId;
+    }
+
+    // Constructor with id but without chefId (for compatibility)
     public FoodItem(int id, String name, String description, String calories, String price, String time,
                     int imageResId, int soldCount, int likeCount, float rating, FoodType type) {
         this.id = id;
@@ -48,10 +66,27 @@ public class FoodItem implements Serializable {
         this.likeCount = likeCount;
         this.rating = rating;
         this.type = type;
+        this.chefId = -1;
     }
 
-    // Getters and setters (unchanged)...
+    // Constructor with id and chefId
+    public FoodItem(int id, String name, String description, String calories, String price, String time,
+                    int imageResId, int soldCount, int likeCount, float rating, FoodType type, int chefId) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.calories = calories;
+        this.price = price;
+        this.time = time;
+        this.imageResId = imageResId;
+        this.soldCount = soldCount;
+        this.likeCount = likeCount;
+        this.rating = rating;
+        this.type = type;
+        this.chefId = chefId;
+    }
 
+    // Getters
     public int getId() { return id; }
     public String getName() { return name; }
     public String getDescription() { return description; }
@@ -64,7 +99,9 @@ public class FoodItem implements Serializable {
     public float getRating() { return rating; }
     public FoodType getType() { return type; }
     public int getQuantity() { return quantity; }
+    public int getChefId() { return chefId; }
 
+    // Setters
     public void setId(int id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setDescription(String description) { this.description = description; }
@@ -77,7 +114,9 @@ public class FoodItem implements Serializable {
     public void setRating(float rating) { this.rating = rating; }
     public void setType(FoodType type) { this.type = type; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setChefId(int chefId) { this.chefId = chefId; }
 
+    // Format price
     public String getFormattedPrice() {
         try {
             return String.format("%,d đ", Integer.parseInt(price)).replace(",", ".");
@@ -86,6 +125,7 @@ public class FoodItem implements Serializable {
         }
     }
 
+    // Parse price to int
     public int getParsedPrice() {
         try {
             return Integer.parseInt(price.replace(".", "").replace("đ", "").trim());
@@ -94,6 +134,7 @@ public class FoodItem implements Serializable {
         }
     }
 
+    // FoodType enum
     public enum FoodType {
         FOOD("Đồ ăn"),
         DRINK("Đồ uống"),

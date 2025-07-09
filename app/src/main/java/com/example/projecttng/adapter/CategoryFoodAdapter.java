@@ -1,6 +1,7 @@
 package com.example.projecttng.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,6 @@ public class CategoryFoodAdapter extends RecyclerView.Adapter<CategoryFoodAdapte
     private final CartDao cartDao;
     private final OnAddToCartListener listener;
 
-    // ✅ Constructor mới có tham số listener
     public CategoryFoodAdapter(Context context, List<FoodItem> foodItems, OnAddToCartListener listener) {
         this.context = context;
         this.foodItems = foodItems;
@@ -92,11 +92,16 @@ public class CategoryFoodAdapter extends RecyclerView.Adapter<CategoryFoodAdapte
             );
             selectedItem.setQuantity(1);
 
-            cartDao.addOrUpdateItem(selectedItem);
-            Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+            // ✅ Lấy userId từ SharedPreferences
+            SharedPreferences prefs = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            int userId = prefs.getInt("userId", -1);
 
-            if (listener != null) {
-                listener.onAdd(); // Gọi callback khi thêm món
+            if (userId != -1) {
+                cartDao.addOrUpdateItem(userId, selectedItem);
+                Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                if (listener != null) listener.onAdd();
+            } else {
+                Toast.makeText(context, "Lỗi: Chưa đăng nhập", Toast.LENGTH_SHORT).show();
             }
         };
 

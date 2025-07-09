@@ -29,10 +29,9 @@
                 android:layout_height="40dp"
                 android:layout_margin="16dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_back_arrow"
-                 />
-
+                android:src="@drawable/ic_back_arrow" />
         </FrameLayout>
+
         <!-- Thông tin món ăn -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,7 +72,7 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <!-- Tabs: Details / Reviews -->
+        <!-- Tabs -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,10 +106,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="A hamburger is a sandwich with a beef patty, served between two soft buns, and topped with various condiments such as cheese, lettuce, and ketchup. It’s a popular..."
+            android:text="A hamburger is a sandwich with a beef patty, served between two soft buns..."
             android:textSize="14sp" />
 
-        <!-- Chọn số lượng + Add to cart -->
+        <!-- Nút Add to Cart + Add to Favorite -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -118,19 +117,29 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- Nút trừ -->
-
             <!-- Nút Add to Cart -->
             <Button
                 android:id="@+id/btn_add_to_cart"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:text="Add to Cart"
                 android:textStyle="bold"
                 android:backgroundTint="#B71C1C"
                 android:textColor="#FFF" />
+
+            <!-- Nút Add to Favorite -->
+            <Button
+                android:id="@+id/btn_add_to_favorite"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Add to Favorite"
+                android:textStyle="bold"
+                android:backgroundTint="#880E4F"
+                android:textColor="#FFF" />
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

@@ -1,14 +1,15 @@
-package com.example.projecttng.activity;
+package com.example.projecttng.activity.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.projecttng.R;
+import com.example.projecttng.activity.sp.HelpCenterActivity;
+import com.example.projecttng.activity.auth.SignInActivity;
 
 public class UserProfileActivity extends AppCompatActivity {
 

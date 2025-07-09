@@ -33,13 +33,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 "soldCount INTEGER," +
                 "likeCount INTEGER," +
                 "rating REAL," +
-                "type TEXT)");
+                "type TEXT," +
+                "chefId INTEGER)"); // ✅ thêm cột chefId
 
-        // Bảng giỏ hàng
+
+        // Bảng giỏ hàng liên kết với users và foods
         db.execSQL("CREATE TABLE IF NOT EXISTS cart (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "userId INTEGER," +
                 "foodId INTEGER," +
                 "quantity INTEGER," +
+                "FOREIGN KEY(userId) REFERENCES users(id)," +
                 "FOREIGN KEY(foodId) REFERENCES foods(id))");
 
         // Bảng đơn hàng
@@ -59,7 +63,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY(orderId) REFERENCES orders(id)," +
                 "FOREIGN KEY(foodId) REFERENCES foods(id))");
 
-        // ✅ Bảng tin nhắn chat
+
         db.execSQL("CREATE TABLE IF NOT EXISTS chat_messages (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "message TEXT," +
@@ -75,7 +79,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS cart");
         db.execSQL("DROP TABLE IF EXISTS orders");
         db.execSQL("DROP TABLE IF EXISTS order_details");
-        db.execSQL("DROP TABLE IF EXISTS chat_messages"); // Thêm dòng này để cập nhật bảng chat
+        db.execSQL("DROP TABLE IF EXISTS chat_messages");
         onCreate(db);
     }
 }

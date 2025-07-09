@@ -4,14 +4,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.projecttng.R;
 import com.example.projecttng.model.FoodItem;
-
 import java.util.List;
 
 public class ManageFoodAdapter extends RecyclerView.Adapter<ManageFoodAdapter.ViewHolder> {
@@ -31,14 +29,17 @@ public class ManageFoodAdapter extends RecyclerView.Adapter<ManageFoodAdapter.Vi
 
     @NonNull
     @Override
+
     public ManageFoodAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_manage_food, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_manage_food, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ManageFoodAdapter.ViewHolder holder, int position) {
         FoodItem item = foodList.get(position);
+        holder.ivFoodImage.setImageResource(item.getImageResId());
         holder.tvName.setText(item.getName());
         holder.tvPrice.setText(item.getFormattedPrice());
 
@@ -52,15 +53,17 @@ public class ManageFoodAdapter extends RecyclerView.Adapter<ManageFoodAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivFoodImage;
         TextView tvName, tvPrice;
         ImageButton btnEdit, btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.tv_food_name);
-            tvPrice = itemView.findViewById(R.id.tv_food_price);
-            btnEdit = itemView.findViewById(R.id.btn_edit);
-            btnDelete = itemView.findViewById(R.id.btn_delete);
+            ivFoodImage = itemView.findViewById(R.id.ivFoodImage);
+            tvName       = itemView.findViewById(R.id.tv_food_name);
+            tvPrice      = itemView.findViewById(R.id.tv_food_price);
+            btnEdit      = itemView.findViewById(R.id.btn_edit);
+            btnDelete    = itemView.findViewById(R.id.btn_delete);
         }
     }
 }

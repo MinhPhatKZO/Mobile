@@ -19,7 +19,7 @@ public class OrderDetailDao {
         dbHelper = new DBHelper(context);
     }
 
-    // ✅ Thêm 1 dòng chi tiết đơn hàng
+    // Thêm 1 dòng chi tiết đơn hàng
     public boolean insertOrderDetail(OrderDetail detail) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -28,11 +28,11 @@ public class OrderDetailDao {
         values.put("quantity", detail.getQuantity());
 
         long result = db.insert(TABLE_NAME, null, values);
-        db.close(); // 🔒 Đóng sau khi ghi
+        db.close(); //  Đóng sau khi ghi
         return result != -1;
     }
 
-    // ✅ Thêm nhiều chi tiết đơn hàng cùng lúc
+    //  Thêm nhiều chi tiết đơn hàng cùng lúc
     public boolean insertMultipleOrderDetails(List<OrderDetail> details) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
@@ -55,7 +55,7 @@ public class OrderDetailDao {
         }
     }
 
-    // ✅ Lấy danh sách chi tiết theo orderId
+    // Lấy danh sách chi tiết theo orderId
     public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
         List<OrderDetail> details = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -73,11 +73,11 @@ public class OrderDetailDao {
         }
 
         cursor.close();
-        db.close(); // 🔒 Đóng sau khi đọc
+        db.close(); // Đóng sau khi đọc
         return details;
     }
 
-    // ✅ Xoá tất cả chi tiết đơn theo orderId
+    // Xoá tất cả chi tiết đơn theo orderId
     public void deleteOrderDetailsByOrderId(int orderId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(TABLE_NAME, "orderId = ?", new String[]{String.valueOf(orderId)});

@@ -1,4 +1,4 @@
-package com.example.projecttng.activity;
+package com.example.projecttng.activity.sp;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -39,7 +39,6 @@ public class ChatActivity extends AppCompatActivity {
     private ChatAdapter adapter;
     private ChatDao chatDao;
 
-    String apiKey = System.getenv("OPENAI_API_KEY"); // <-- an toàn hơn
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

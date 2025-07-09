@@ -26,12 +26,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private final List<FoodItem> cartItems;
     private final OnCartChangedListener listener;
     private final CartDao cartDao;
+    private final int userId;
 
-    public CartAdapter(Context context, List<FoodItem> cartItems, OnCartChangedListener listener) {
+    public CartAdapter(Context context, List<FoodItem> cartItems, OnCartChangedListener listener, int userId) {
         this.context = context;
         this.cartItems = cartItems;
         this.listener = listener;
         this.cartDao = new CartDao(context);
+        this.userId = userId;
     }
 
     @NonNull
@@ -50,7 +52,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.tvPrice.setText(formatCurrency(item.getParsedPrice() * item.getQuantity()));
         holder.imgFood.setImageResource(item.getImageResId());
 
-        // ➕ Tăng số lượng
+        // Tăng số lượng
         holder.btnPlus.setOnClickListener(v -> {
             int pos = holder.getAdapterPosition();
             if (pos == RecyclerView.NO_POSITION) return;
@@ -59,12 +61,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             int newQty = food.getQuantity() + 1;
             food.setQuantity(newQty);
 
-            cartDao.updateQuantityByFoodId(food.getId(), newQty);
+            cartDao.updateQuantityByFoodId(userId, food.getId(), newQty);
             notifyItemChanged(pos);
             listener.onCartChanged();
         });
 
-        // ➖ Giảm số lượng
+        // Giảm số lượng
         holder.btnMinus.setOnClickListener(v -> {
             int pos = holder.getAdapterPosition();
             if (pos == RecyclerView.NO_POSITION) return;
@@ -74,10 +76,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
             if (newQty > 0) {
                 food.setQuantity(newQty);
-                cartDao.updateQuantityByFoodId(food.getId(), newQty);
+                cartDao.updateQuantityByFoodId(userId, food.getId(), newQty);
                 notifyItemChanged(pos);
             } else {
-                cartDao.removeFromCart(food.getId());
+                cartDao.removeFromCart(userId, food.getId());
                 cartItems.remove(pos);
                 notifyItemRemoved(pos);
                 notifyItemRangeChanged(pos, cartItems.size());

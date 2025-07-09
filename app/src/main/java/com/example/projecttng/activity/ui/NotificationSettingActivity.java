@@ -1,4 +1,4 @@
-package com.example.projecttng.activity;
+package com.example.projecttng.activity.ui;
 
 import android.os.Bundle;
 import android.widget.Switch;

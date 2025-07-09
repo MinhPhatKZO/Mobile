@@ -21,7 +21,7 @@ public class UserDao {
     public boolean insertUser(String username, String password, String role) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("username", username);
+        values.put("username", username); // truyền giá trị vào
         values.put("password", password);
         values.put("role", role);
         long result = db.insert("users", null, values);
@@ -45,7 +45,7 @@ public class UserDao {
     // Kiểm tra tài khoản đăng nhập hợp lệ
     public boolean isValidLogin(String username, String password) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ? AND password = ?", new String[]{username, password});
+        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ? AND password = ?", new String[]{username, password}); // tránh SQL Injection
         boolean valid = cursor.getCount() > 0;
         cursor.close();
         return valid;
@@ -67,13 +67,15 @@ public class UserDao {
     public String getUserRole(String username) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT role FROM users WHERE username = ?", new String[]{username});
-        String role = "user"; // mặc định
+        String role = "user"; // Mặc định là user nếu không tìm thấy
+         // Trả về quyền của người dùng
         if (cursor.moveToFirst()) {
-            role = cursor.getString(cursor.getColumnIndexOrThrow("role"));
+            role = cursor.getString(cursor.getColumnIndexOrThrow("role")); // phần cấp admin và user
         }
         cursor.close();
         return role;
     }
+    // Lấy tất cả người dùng và quyền của họ
     public List<String> getAllUsers() {
         List<String> userList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -129,6 +131,17 @@ public class UserDao {
         }
         cursor.close();
         return password;
+    }
+    public int getUserIdByUsername(String username) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id FROM User WHERE username = ?", new String[]{username});
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(0);
+            cursor.close();
+            return id;
+        }
+        cursor.close();
+        return -1;
     }
 
 

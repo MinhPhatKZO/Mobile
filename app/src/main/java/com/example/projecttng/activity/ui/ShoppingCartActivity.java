@@ -1,6 +1,7 @@
-package com.example.projecttng.activity;
+package com.example.projecttng.activity.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,12 +34,22 @@ public class ShoppingCartActivity extends AppCompatActivity {
     private CartDao cartDao;
     private CartAdapter cartAdapter;
     private List<FoodItem> cartItemList;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
         setContentView(R.layout.activity_shoppingcart);
+
+        // Lấy userId từ SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        userId = prefs.getInt("userId", -1);
+        if (userId == -1) {
+            Toast.makeText(this, "Không xác định được người dùng", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         // Ánh xạ view
         btnBack = findViewById(R.id.btn_back);
@@ -69,9 +80,9 @@ public class ShoppingCartActivity extends AppCompatActivity {
     }
 
     private void setupCart() {
-        cartItemList = cartDao.getAllCartItems();
+        cartItemList = cartDao.getAllCartItems(userId); // Sửa lại truyền userId
 
-        cartAdapter = new CartAdapter(this, cartItemList, this::updateCartSummary);
+        cartAdapter = new CartAdapter(this, cartItemList, this::updateCartSummary, userId);
         rvCartItems.setLayoutManager(new LinearLayoutManager(this));
         rvCartItems.setAdapter(cartAdapter);
 
@@ -95,7 +106,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
         return String.format("%,d đ", amount).replace(",", ".");
     }
 
-    // ✅ Xử lý khi đặt hàng
     private void handleCheckout() {
         int selectedId = rgPayment.getCheckedRadioButtonId();
 
@@ -118,8 +128,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
             Toast.makeText(this, "Giỏ hàng trống!", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        int userId = 1; // TODO: thay bằng user thực từ session
 
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
         Order order = new Order(userId, totalPrice, method, date);
@@ -149,10 +157,10 @@ public class ShoppingCartActivity extends AppCompatActivity {
             return;
         }
 
-        cartDao.clearCart();
+        cartDao.clearCart(userId); // Sửa truyền userId
 
         Toast.makeText(this, "Đặt hàng thành công bằng " + method, Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(this, OrderActivity.class); // nên tạo màn này
+        Intent intent = new Intent(this, OrderActivity.class);
         intent.putExtra("orderId", (int) orderId);
         startActivity(intent);
         finish();

@@ -1,4 +1,4 @@
-package com.example.projecttng.activity;
+package com.example.projecttng.activity.ui;
 
 import android.content.Intent;
 import android.os.Bundle;

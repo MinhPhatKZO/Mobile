@@ -20,17 +20,23 @@ public class CartDao {
         this.dbHelper = new DBHelper(context);
     }
 
-    public void addOrUpdateCartItem(int foodId, int quantity) {
+    // Thêm hoặc cập nhật giỏ hàng theo user
+    public void addOrUpdateCartItem(int userId, int foodId, int quantity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        try (Cursor cursor = db.rawQuery("SELECT quantity FROM cart WHERE foodId = ?", new String[]{String.valueOf(foodId)})) {
+        try (Cursor cursor = db.rawQuery(
+                "SELECT quantity FROM cart WHERE userId = ? AND foodId = ?",
+                new String[]{String.valueOf(userId), String.valueOf(foodId)})) {
+
             if (cursor.moveToFirst()) {
                 int currentQuantity = cursor.getInt(0);
                 ContentValues values = new ContentValues();
                 values.put("quantity", currentQuantity + quantity);
-                db.update("cart", values, "foodId = ?", new String[]{String.valueOf(foodId)});
+                db.update("cart", values, "userId = ? AND foodId = ?",
+                        new String[]{String.valueOf(userId), String.valueOf(foodId)});
             } else {
                 ContentValues values = new ContentValues();
+                values.put("userId", userId);
                 values.put("foodId", foodId);
                 values.put("quantity", quantity);
                 db.insert("cart", null, values);
@@ -40,30 +46,36 @@ public class CartDao {
         db.close();
     }
 
-    public void addOrUpdateItem(FoodItem item) {
-        addOrUpdateCartItem(item.getId(), item.getQuantity());
+    public void addOrUpdateItem(int userId, FoodItem item) {
+        addOrUpdateCartItem(userId, item.getId(), item.getQuantity());
     }
 
-    public void removeFromCart(int foodId) {
+    // Xóa một món khỏi giỏ hàng của user
+    public void removeFromCart(int userId, int foodId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete("cart", "foodId = ?", new String[]{String.valueOf(foodId)});
+        db.delete("cart", "userId = ? AND foodId = ?",
+                new String[]{String.valueOf(userId), String.valueOf(foodId)});
         db.close();
     }
 
-    public void updateQuantityByFoodId(int foodId, int quantity) {
+    // Cập nhật số lượng món trong giỏ
+    public void updateQuantityByFoodId(int userId, int foodId, int quantity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("quantity", quantity);
-        db.update("cart", values, "foodId = ?", new String[]{String.valueOf(foodId)});
+        db.update("cart", values, "userId = ? AND foodId = ?",
+                new String[]{String.valueOf(userId), String.valueOf(foodId)});
         db.close();
     }
 
-    public List<FoodItem> getAllCartItems() {
+    // Lấy tất cả món trong giỏ hàng của user
+    public List<FoodItem> getAllCartItems(int userId) {
         List<FoodItem> cartItems = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String query = "SELECT f.*, c.quantity FROM cart c JOIN foods f ON c.foodId = f.id";
-        try (Cursor cursor = db.rawQuery(query, null)) {
+        String query = "SELECT f.*, c.quantity FROM cart c " +
+                "JOIN foods f ON c.foodId = f.id WHERE c.userId = ?";
+        try (Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)})) {
             if (cursor.moveToFirst()) {
                 do {
                     int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
@@ -81,9 +93,9 @@ public class CartDao {
 
                     int quantity = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
 
-                    FoodItem item = new FoodItem(id, name, desc, calories, price, time, imageResId, sold, likes, rating, type);
+                    FoodItem item = new FoodItem(id, name, desc, calories, price, time,
+                            imageResId, sold, likes, rating, type);
                     item.setQuantity(quantity);
-
                     cartItems.add(item);
                 } while (cursor.moveToNext());
             }
@@ -93,11 +105,14 @@ public class CartDao {
         return cartItems;
     }
 
-    public int getTotalQuantity() {
+    // Tính tổng số lượng sản phẩm trong giỏ hàng của user
+    public int getTotalQuantity(int userId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         int total = 0;
 
-        try (Cursor cursor = db.rawQuery("SELECT SUM(quantity) FROM cart", null)) {
+        try (Cursor cursor = db.rawQuery(
+                "SELECT SUM(quantity) FROM cart WHERE userId = ?",
+                new String[]{String.valueOf(userId)})) {
             if (cursor.moveToFirst()) {
                 total = cursor.getInt(0);
             }
@@ -107,15 +122,20 @@ public class CartDao {
         return total;
     }
 
-    public int getTotalPrice() {
+    // Tính tổng giá tiền giỏ hàng của user
+    public int getTotalPrice(int userId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         int total = 0;
 
-        String query = "SELECT f.price, c.quantity FROM cart c JOIN foods f ON c.foodId = f.id";
-        try (Cursor cursor = db.rawQuery(query, null)) {
+        String query = "SELECT f.price, c.quantity FROM cart c " +
+                "JOIN foods f ON c.foodId = f.id WHERE c.userId = ?";
+        try (Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)})) {
             if (cursor.moveToFirst()) {
                 do {
-                    String priceStr = cursor.getString(0).replace(".", "").replace("đ", "").trim();
+                    String priceStr = cursor.getString(0)
+                            .replace(".", "")
+                            .replace("đ", "")
+                            .trim();
                     int price = Integer.parseInt(priceStr);
                     int qty = cursor.getInt(1);
                     total += price * qty;
@@ -127,9 +147,10 @@ public class CartDao {
         return total;
     }
 
-    public void clearCart() {
+    // Xóa toàn bộ giỏ hàng của user
+    public void clearCart(int userId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete("cart", null, null);
+        db.delete("cart", "userId = ?", new String[]{String.valueOf(userId)});
         db.close();
     }
 }

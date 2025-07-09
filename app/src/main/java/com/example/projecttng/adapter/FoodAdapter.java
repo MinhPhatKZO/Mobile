@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projecttng.R;
-import com.example.projecttng.activity.FoodDetailActivity;
+import com.example.projecttng.activity.ui.FoodDetailActivity;
 import com.example.projecttng.model.FoodItem;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         // Gửi ID sang FoodDetailActivity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, FoodDetailActivity.class);
-            intent.putExtra("id", item.getId()); // 🔥 Dùng ID để lấy dữ liệu từ SQLite
+            intent.putExtra("id", item.getId());
             context.startActivity(intent);
         });
     }
@@ -60,7 +60,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         return foodList.size();
     }
 
-    // Cập nhật danh sách món
     public void setFoodList(List<FoodItem> newList) {
         foodList.clear();
         if (newList != null) {
@@ -69,7 +68,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         notifyDataSetChanged();
     }
 
-    // Lấy item tại vị trí
     public FoodItem getItem(int position) {
         return (position >= 0 && position < foodList.size()) ? foodList.get(position) : null;
     }

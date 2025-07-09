@@ -1,4 +1,4 @@
-package com.example.projecttng.activity;
+package com.example.projecttng.activity.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,7 +43,7 @@ public class ManageFoodsActivity extends AppCompatActivity {
         adapter = new ManageFoodAdapter(foodList, new ManageFoodAdapter.OnItemClickListener() {
             @Override
             public void onEdit(FoodItem foodItem) {
-                Intent intent = new Intent(ManageFoodsActivity.this, com.example.projecttng.activity.EditFoodActivity.class);
+                Intent intent = new Intent(ManageFoodsActivity.this, EditFoodActivity.class);
                 intent.putExtra("food", foodItem);
                 startActivity(intent);
             }
@@ -52,7 +52,7 @@ public class ManageFoodsActivity extends AppCompatActivity {
             public void onDelete(FoodItem foodItem) {
                 foodDao.deleteFood(foodItem.getId());
                 foodList.remove(foodItem);
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged(); // cập nhật
                 Toast.makeText(ManageFoodsActivity.this, "Đã xóa " + foodItem.getName(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -61,7 +61,7 @@ public class ManageFoodsActivity extends AppCompatActivity {
 
         // Xử lý khi bấm nút thêm món ăn
         btnAddFood.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageFoodsActivity.this, com.example.projecttng.activity.AddFoodActivity.class);
+            Intent intent = new Intent(ManageFoodsActivity.this, AddFoodActivity.class);
             startActivity(intent);
         });
     }

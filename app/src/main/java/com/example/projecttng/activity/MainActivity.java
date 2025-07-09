@@ -14,6 +14,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projecttng.activity.ui.CategoryActivity;
+import com.example.projecttng.activity.ui.FavoriteActivity;
+import com.example.projecttng.activity.ui.OrderActivity;
+import com.example.projecttng.activity.ui.ShoppingCartActivity;
+import com.example.projecttng.activity.ui.UserProfileActivity;
 import com.example.projecttng.model.FoodItem;
 import com.example.projecttng.R;
 import com.example.projecttng.adapter.FoodAdapter;

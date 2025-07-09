@@ -1,4 +1,4 @@
-package com.example.projecttng.activity;
+package com.example.projecttng.activity.admin;
 
 import android.os.Bundle;
 import android.widget.Button;

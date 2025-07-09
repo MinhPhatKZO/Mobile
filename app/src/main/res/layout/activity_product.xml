@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="#FFFFFF"
     android:padding="16dp"
-    tools:context=".activity.ProductActivity">
+    tools:context=".activity.ui.ProductActivity">
 
     <TextView
         android:id="@+id/title_product"
