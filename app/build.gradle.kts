@@ -1,6 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
+// Đọc key từ file keys.properties
+val keyProps = Properties()
+val keyFile = rootProject.file("keys.properties")
+if (keyFile.exists()) {
+    keyProps.load(keyFile.inputStream())
+}
+val openAiKey = keyProps.getProperty("OPENAI_API_KEY") ?: "sk-PLACEHOLDER"
 
 android {
     namespace = "com.example.projecttng"
@@ -14,6 +24,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // 👇 Thêm API key vào BuildConfig
+        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
+    }
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
@@ -25,6 +41,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -32,7 +49,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.okhttp)
     implementation(libs.appcompat)
     implementation(libs.material)

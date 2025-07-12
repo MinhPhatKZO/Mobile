@@ -13,5 +13,11 @@
         <item name="android:background">@color/light_gray_bg</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+    <style name="Btn_Style_Confirm">
+        <item name="android:backgroundTint">#CD1076</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
 </resources>
