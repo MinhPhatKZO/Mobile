@@ -2,6 +2,8 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
+    // ❌ XÓA dòng này vì bạn dùng Java
+    // id("kotlin-kapt")
 }
 
 // Đọc key từ file keys.properties
@@ -24,8 +26,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // 👇 Thêm API key vào BuildConfig
         buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
     }
     buildFeatures {
@@ -54,6 +54,21 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+    // Glide cho Java
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    implementation(
+        fileTree(
+            mapOf(
+                "dir" to "C:\\Users\\MINH PHAT\\Downloads\\zalopay",
+                "include" to listOf("*.aar", "*.jar"),
+                "exclude" to listOf<String>()
+            )
+        )
+    )
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

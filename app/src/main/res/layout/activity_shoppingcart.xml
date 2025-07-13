@@ -96,16 +96,16 @@
                     android:text="Thanh toán khi nhận hàng (COD)" />
 
                 <RadioButton
-                    android:id="@+id/rb_momo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Thanh toán bằng Momo" />
-
-                <RadioButton
                     android:id="@+id/rb_vnpay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Thanh toán bằng VNPay" />
+
+                <RadioButton
+                    android:id="@+id/rb_zalopay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thanh toán bằng ZaloPay" />
             </RadioGroup>
 
             <Button

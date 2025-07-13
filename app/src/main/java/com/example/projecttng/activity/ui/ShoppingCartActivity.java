@@ -42,7 +42,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
         setContentView(R.layout.activity_shoppingcart);
 
-        // Lấy userId từ SharedPreferences
         SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         userId = prefs.getInt("userId", -1);
         if (userId == -1) {
@@ -51,7 +50,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
             return;
         }
 
-        // Ánh xạ view
         btnBack = findViewById(R.id.btn_back);
         tvTitle = findViewById(R.id.tv_title);
         tvItemCount = findViewById(R.id.tv_item_count);
@@ -80,12 +78,10 @@ public class ShoppingCartActivity extends AppCompatActivity {
     }
 
     private void setupCart() {
-        cartItemList = cartDao.getAllCartItems(userId); // Sửa lại truyền userId
-
+        cartItemList = cartDao.getAllCartItems(userId);
         cartAdapter = new CartAdapter(this, cartItemList, this::updateCartSummary, userId);
         rvCartItems.setLayoutManager(new LinearLayoutManager(this));
         rvCartItems.setAdapter(cartAdapter);
-
         updateCartSummary();
     }
 
@@ -114,19 +110,26 @@ public class ShoppingCartActivity extends AppCompatActivity {
             return;
         }
 
-        String method = "";
-        if (selectedId == R.id.rb_cod) method = "COD";
-        else if (selectedId == R.id.rb_momo) method = "Momo";
-        else if (selectedId == R.id.rb_vnpay) method = "VNPay";
+        if (cartItemList.isEmpty()) {
+            Toast.makeText(this, "Giỏ hàng trống!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String method;
+        if (selectedId == R.id.rb_cod) {
+            method = "COD";
+        } else if (selectedId == R.id.rb_vnpay) {
+            method = "VNPay";
+        } else if (selectedId == R.id.rb_zalopay) {
+            method = "ZaloPay";
+        } else {
+            Toast.makeText(this, "Phương thức thanh toán không hợp lệ!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         int totalPrice = 0;
         for (FoodItem item : cartItemList) {
             totalPrice += item.getParsedPrice() * item.getQuantity();
-        }
-
-        if (cartItemList.isEmpty()) {
-            Toast.makeText(this, "Giỏ hàng trống!", Toast.LENGTH_SHORT).show();
-            return;
         }
 
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -157,11 +160,20 @@ public class ShoppingCartActivity extends AppCompatActivity {
             return;
         }
 
-        cartDao.clearCart(userId); // Sửa truyền userId
+        cartDao.clearCart(userId);
 
         Toast.makeText(this, "Đặt hàng thành công bằng " + method, Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(this, OrderActivity.class);
-        intent.putExtra("orderId", (int) orderId);
+
+        Intent intent;
+        if (method.equals("ZaloPay")) {
+            intent = new Intent(this, OrderZaloPayActivity.class);
+            intent.putExtra("orderId", (int) orderId);
+            intent.putExtra("amount", totalPrice);
+        } else {
+            intent = new Intent(this, OrderActivity.class);
+            intent.putExtra("orderId", (int) orderId);
+        }
+
         startActivity(intent);
         finish();
     }

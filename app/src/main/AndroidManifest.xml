@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!-- quyền truy cập internet -->
+
+    <!-- Internet permission -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- Add more permissions here if needed
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    -->
 
     <application
         android:allowBackup="true"
@@ -16,7 +22,7 @@
         android:theme="@style/Theme.ProjectTổng"
         tools:targetApi="31">
 
-        <!-- SignIn là màn hình đầu tiên khởi chạy -->
+        <!-- SignIn is the launcher activity -->
         <activity
             android:name=".activity.auth.SignInActivity"
             android:exported="true">
@@ -26,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <!-- SignUp sẽ quay về SignIn -->
+        <!-- SignUp returns to SignIn -->
         <activity
             android:name=".activity.auth.SignUpActivity"
             android:exported="false"
@@ -36,76 +42,30 @@
                 android:value=".activity.auth.SignInActivity" />
         </activity>
 
-        <!-- MainActivity: chỉ vào sau khi đăng nhập -->
-        <activity
-            android:name=".activity.MainActivity"
-            android:exported="false" />
+        <!-- MainActivity: after login -->
+        <activity android:name=".activity.MainActivity" android:exported="false" />
+        <activity android:name=".activity.ui.HomeActivity" android:exported="false" />
+        <activity android:name=".activity.ui.CategoryActivity" android:exported="false" />
+        <activity android:name=".activity.ui.OrderZaloPayActivity" android:exported="false" />
+        <activity android:name=".activity.ui.OrderActivity" android:exported="false" />
+        <activity android:name=".activity.ui.ProductActivity" android:exported="false" />
+        <activity android:name=".activity.ui.ShoppingCartActivity" android:exported="false" />
+        <activity android:name=".activity.ui.UserProfileActivity" android:exported="false" />
+        <activity android:name=".activity.ui.FavoriteActivity" android:exported="false" />
+        <activity android:name=".activity.ui.FoodDetailActivity" android:exported="false" />
 
-        <activity
-            android:name=".activity.ui.HomeActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".activity.ui.CategoryActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".activity.ui.OrderActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ui.ProductActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".activity.ui.ShoppingCartActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ui.UserProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ui.FavoriteActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ui.FoodDetailActivity"
-            android:exported="false" />
         <!-- Admin dashboard -->
-        <activity
-            android:name=".activity.admin.AdminDashboardActivity"
-            android:exported="false" />
-
-        <!-- Quản lý người dùng -->
-        <activity
-            android:name=".activity.admin.ManageUsersActivity"
-            android:exported="false" />
-
-        <!-- Quản lý món ăn -->
-        <activity
-            android:name=".activity.admin.ManageFoodsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.admin.AddFoodActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.admin.EditFoodActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ui.EditProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ui.NotificationSettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.sp.HelpCenterActivity"
-            android:exported="false" />
+        <activity android:name=".activity.admin.AdminDashboardActivity" android:exported="false" />
+        <activity android:name=".activity.admin.ManageUsersActivity" android:exported="false" />
+        <activity android:name=".activity.admin.ManageFoodsActivity" android:exported="false" />
+        <activity android:name=".activity.admin.AddFoodActivity" android:exported="false" />
+        <activity android:name=".activity.admin.EditFoodActivity" android:exported="false" />
+        <activity android:name=".activity.ui.EditProfileActivity" android:exported="false" />
+        <activity android:name=".activity.ui.NotificationSettingActivity" android:exported="false" />
+        <activity android:name=".activity.sp.HelpCenterActivity" android:exported="false" />
         <!-- Chatbox AI -->
-        <activity
-            android:name=".activity.sp.ChatActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ui.ChefFoodsActivity"
-            android:exported="false" />
-
+        <activity android:name=".activity.sp.ChatActivity" android:exported="false" />
+        <activity android:name=".activity.ui.ChefFoodsActivity" android:exported="false" />
 
     </application>
-
 </manifest>

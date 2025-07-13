@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -100,7 +99,7 @@ public class HomeActivity extends AppCompatActivity {
             } else if (id == R.id.nav_product) {
                 startActivity(new Intent(this, ProductActivity.class));
             } else if (id == R.id.nav_order) {
-                startActivity(new Intent(this, OrderActivity.class));
+                startActivity(new Intent(this, OrderZaloPayActivity.class));
             } else if (id == R.id.nav_shopping_cart) {
                 startActivity(new Intent(this, ShoppingCartActivity.class));
             }

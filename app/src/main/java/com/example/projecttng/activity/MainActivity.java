@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projecttng.activity.ui.CategoryActivity;
 import com.example.projecttng.activity.ui.FavoriteActivity;
-import com.example.projecttng.activity.ui.OrderActivity;
+import com.example.projecttng.activity.ui.OrderZaloPayActivity;
 import com.example.projecttng.activity.ui.ShoppingCartActivity;
 import com.example.projecttng.activity.ui.UserProfileActivity;
 import com.example.projecttng.model.FoodItem;
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivityWithAnimation(CategoryActivity.class);
                     return true;
                 } else if (id == R.id.nav_order) {
-                    startActivityWithAnimation(OrderActivity.class);
+                    startActivityWithAnimation(OrderZaloPayActivity.class);
                     return true;
                 } else if (id == R.id.nav_shopping_cart) {
                     startActivityWithAnimation(ShoppingCartActivity.class);

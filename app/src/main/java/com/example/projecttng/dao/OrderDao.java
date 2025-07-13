@@ -50,4 +50,21 @@ public class OrderDao {
         cursor.close();
         return orderList;
     }
+    // Add this method inside OrderDao
+    public Order getOrderById(int orderId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM orders WHERE id = ?", new String[]{String.valueOf(orderId)});
+        Order order = null;
+        if (cursor.moveToFirst()) {
+            order = new Order();
+            order.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+            order.setUserId(cursor.getInt(cursor.getColumnIndexOrThrow("userId")));
+            order.setTotalPrice(cursor.getInt(cursor.getColumnIndexOrThrow("totalPrice")));
+            order.setPaymentMethod(cursor.getString(cursor.getColumnIndexOrThrow("paymentMethod")));
+            order.setOrderDate(cursor.getString(cursor.getColumnIndexOrThrow("orderDate")));
+        }
+        cursor.close();
+        return order;
+    }
+
 }
