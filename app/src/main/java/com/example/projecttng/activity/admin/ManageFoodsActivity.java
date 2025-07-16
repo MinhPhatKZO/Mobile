@@ -33,13 +33,13 @@ public class ManageFoodsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_foods);
         btnAddFood = findViewById(R.id.btn_add_food);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); // dọc
 
         // Khởi tạo DAO và lấy danh sách món ăn
         foodDao = new FoodDao(this);
         foodList = foodDao.getAllFoods();
 
-        // Adapter hiển thị danh sách và xử lý sửa/xóa
+        //  hiển thị danh sách và xử lý sửa/xóa
         adapter = new ManageFoodAdapter(foodList, new ManageFoodAdapter.OnItemClickListener() {
             @Override
             public void onEdit(FoodItem foodItem) {
@@ -71,7 +71,7 @@ public class ManageFoodsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         foodList.clear();
-        foodList.addAll(foodDao.getAllFoods());
+        foodList.addAll(foodDao.getAllFoods()); // cập nhật danh sách
         adapter.notifyDataSetChanged();
     }
 }

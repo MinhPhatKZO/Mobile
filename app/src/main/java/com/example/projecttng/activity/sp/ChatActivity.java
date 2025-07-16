@@ -2,8 +2,8 @@ package com.example.projecttng.activity.sp;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,13 +34,14 @@ public class ChatActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private EditText edtMessage;
-    private Button btnSend;
+    private ImageButton btnSend;
 
     private List<Message> messageList;
     private ChatAdapter adapter;
     private ChatDao chatDao;
 
-    private static final String OPENAI_API_KEY = BuildConfig.OPENAI_API_KEY;
+    // 🔐 API KEY từ file keys.properties thông qua BuildConfig
+    private static final String GEMINI_API_KEY = BuildConfig.GEMINI_API_KEY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,26 +76,32 @@ public class ChatActivity extends AppCompatActivity {
         adapter.notifyItemInserted(messageList.size() - 1);
         recyclerView.scrollToPosition(messageList.size() - 1);
 
-        sendMessageToGPT(msg);
+        sendMessageToGemini(msg);
     }
 
-    private void sendMessageToGPT(String userMessage) {
+    private void sendMessageToGemini(String userMessage) {
         OkHttpClient client = new OkHttpClient();
 
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("model", "gpt-3.5-turbo");
+            JSONArray contents = new JSONArray();
 
-            JSONArray messages = new JSONArray();
-            JSONObject userMsg = new JSONObject();
-            userMsg.put("role", "user");
-            userMsg.put("content", userMessage);
-            messages.put(userMsg);
+            // ✅ Gemini yêu cầu format "role: user" và "parts" là mảng các đoạn text
+            JSONObject content = new JSONObject();
+            content.put("role", "user");
 
-            jsonBody.put("messages", messages);
+            JSONArray parts = new JSONArray();
+            JSONObject part = new JSONObject();
+            part.put("text", userMessage);
+            parts.put(part);
+
+            content.put("parts", parts);
+            contents.put(content);
+
+            jsonBody.put("contents", contents);
         } catch (JSONException e) {
             e.printStackTrace();
-            addBotMessage("\u274c Lỗi tạo request");
+            runOnUiThread(() -> addBotMessage("❌ Lỗi tạo request Gemini"));
             return;
         }
 
@@ -103,43 +110,44 @@ public class ChatActivity extends AppCompatActivity {
                 MediaType.parse("application/json")
         );
 
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + BuildConfig.GEMINI_API_KEY;
+
         Request request = new Request.Builder()
-                .url("https://api.openai.com/v1/chat/completions")
+                .url(url)
                 .post(body)
-                .addHeader("Authorization", "Bearer " + OPENAI_API_KEY)
                 .addHeader("Content-Type", "application/json")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(() -> addBotMessage("\u26a0\ufe0f Không thể kết nối GPT: " + e.getMessage()));
+                runOnUiThread(() -> addBotMessage("⚠️ Không thể kết nối Gemini: " + e.getMessage()));
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    runOnUiThread(() -> addBotMessage("\u274c GPT lỗi: " + response.code()));
+                    String responseBody = response.body().string();
+                    runOnUiThread(() -> addBotMessage("❌ Gemini lỗi: " + response.code() + "\n" + responseBody));
                     return;
                 }
 
                 try {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
-                    JSONArray choices = jsonResponse.getJSONArray("choices");
-                    String botReply = choices.getJSONObject(0)
-                            .getJSONObject("message")
-                            .getString("content")
-                            .trim();
+                    JSONArray candidates = jsonResponse.getJSONArray("candidates");
+                    JSONObject first = candidates.getJSONObject(0);
+                    JSONArray parts = first.getJSONObject("content").getJSONArray("parts");
+                    String botReply = parts.getJSONObject(0).getString("text");
 
                     runOnUiThread(() -> addBotMessage(botReply));
-
                 } catch (JSONException e) {
-                    runOnUiThread(() -> addBotMessage("\u274c Lỗi xử lý phản hồi GPT"));
+                    runOnUiThread(() -> addBotMessage("❌ Lỗi xử lý phản hồi Gemini"));
                 }
             }
         });
     }
+
 
     private void addBotMessage(String text) {
         Message botMsg = new Message(text, false);

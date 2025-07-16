@@ -2,17 +2,23 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    // ❌ XÓA dòng này vì bạn dùng Java
-    // id("kotlin-kapt")
+    // ❌ Không cần kotlin-kapt nếu dùng Java
 }
 
-// Đọc key từ file keys.properties
-val keyProps = Properties()
-val keyFile = rootProject.file("keys.properties")
-if (keyFile.exists()) {
-    keyProps.load(keyFile.inputStream())
+// ✅ Đọc key sau khi khởi tạo biến
+val geminiKey: String by lazy {
+    val props = Properties()
+    val keyFile = rootProject.file("keys.properties")
+    if (keyFile.exists()) {
+        props.load(keyFile.inputStream())
+        val key = props.getProperty("GEMINI_API_KEY") ?: "AIza-PLACEHOLDER"
+        println("🔐 Gemini API key loaded from file: $key") // ✅ In ra sau khi có key
+        key
+    } else {
+        println("⚠️ File keys.properties không tồn tại")
+        "AIza-PLACEHOLDER"
+    }
 }
-val openAiKey = keyProps.getProperty("OPENAI_API_KEY") ?: "sk-PLACEHOLDER"
 
 android {
     namespace = "com.example.projecttng"
@@ -26,8 +32,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
+
+        // ✅ Đưa key vào BuildConfig
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
     }
+
     buildFeatures {
         buildConfig = true
     }
@@ -55,7 +64,6 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    // Glide cho Java
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
